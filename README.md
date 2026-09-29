@@ -32,6 +32,12 @@ LaLiga Fantasy has no proper PC experience: there is no desktop app and the web 
 | **Player stats modal** | Per-player breakdown by matchday, reused across sections. |
 | **Market trends** | Price trends (1d to 30d) parsed from a public trends page and **matched to league players with a weighted fuzzy name-matching algorithm** (accent normalisation, tokens, initials, slug, market-value proximity, position). |
 
+## Download
+
+**Windows (portable):** download the latest `.zip` from the [Releases page](https://github.com/0maxwelle4/Mi-App-Fantasy/releases/latest), unzip it and run `mi-app-fantasy.exe`.
+
+> Windows SmartScreen may warn about an unknown publisher because the app is not code-signed. Click "More info" and then "Run anyway".
+
 ## Tech highlights
 
 - **Angular 22** with standalone components, **signals**, `computed()` and `toSignal` / `toObservable` interop.

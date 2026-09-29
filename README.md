@@ -123,4 +123,4 @@ This is a learning project and I would love feedback on architecture, state mana
 
 ## License
 
-Add your license here (for example MIT).
+MIT. See the [LICENSE](LICENSE) file.

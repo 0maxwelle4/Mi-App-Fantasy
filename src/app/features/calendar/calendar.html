@@ -1,0 +1,375 @@
+<header class="top">
+  @if (seasonDetails()?.current; as season) {
+    <div>
+      <div class="eyebrow">
+        LA LIGA · TEMPORADA
+        {{ season.title }}
+      </div>
+
+      <h1 class="title">CALENDARIO</h1>
+    </div>
+
+    @if (false) {
+      <div class="money">
+        <span> JORNADA ACTUAL </span>
+
+        <strong>
+          JORNADA
+          {{ currentWeek().weekNumber | number: '2.0-0' }}
+        </strong>
+      </div>
+    }
+
+    <!-- BOTON REFRESCAR -->
+    <button
+      type="button"
+      class="refresh-btn"
+      [class.spinning]="loading() || calendarLoading()"
+      [disabled]="loading() || calendarLoading()"
+      (click)="refresh()"
+      aria-label="Refrescar movimientos"
+      title="Refrescar movimientos"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="23 4 23 10 17 10"></polyline>
+        <polyline points="1 20 1 14 7 14"></polyline>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+      </svg>
+      <span>Refrescar</span>
+    </button>
+  } @else {
+    <div>
+      <div class="skeleton-shimmer calendar-header-small"></div>
+
+      <div class="skeleton-shimmer calendar-header-title"></div>
+    </div>
+
+    <div class="money">
+      <div class="skeleton-shimmer calendar-header-week"></div>
+    </div>
+  }
+</header>
+
+<section class="section">
+  <!-- ========================================================
+       JORNADAS
+       ======================================================== -->
+
+  <div class="section-head">
+    <h2>JORNADAS</h2>
+
+    <span class="small"> Desliza para ver toda la temporada </span>
+  </div>
+
+  @if (loading()) {
+    <div class="jornada-strip-wrap">
+      <div class="jornada-strip">
+        @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+          <div class="calendar-week-skeleton">
+            <div class="skeleton-shimmer"></div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="jornada-strip-wrap">
+      <div class="jornada-strip">
+        @for (jornada of jornadasArray(); track jornada) {
+          <div
+            class="jornada-chip"
+            [class.current]="jornada === currentWeek().weekNumber"
+            [class.active]="jornada === selectedWeek()"
+            (click)="selectedWeek.set(jornada)"
+          >
+            <span class="jnum"> J{{ jornada | number: '2.0-0' }} </span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ========================================================
+       SELECTED WEEK
+       ======================================================== -->
+
+  <div class="jornada-heading">
+    <div>
+      <h3>
+        JORNADA
+        {{ selectedWeek() | number: '2.0-0' }}
+      </h3>
+    </div>
+
+    <span class="small"> Toca un partido jugado o en directo para ver sus estadísticas </span>
+  </div>
+
+  <!-- ========================================================
+       FIXTURES
+       ======================================================== -->
+
+  @if (loadingFixtures()) {
+    <!-- ================================================
+         FIXTURE SKELETONS
+         ================================================ -->
+
+    <div class="fixtures-grid">
+      @for (i of skeletonFixtures; track i) {
+        <article class="fx-card fixture-skeleton">
+          <!-- HOME -->
+
+          <div class="fx-team home">
+            <div class="skeleton-shimmer skeleton-team-logo"></div>
+
+            <div class="skeleton-shimmer skeleton-team-name"></div>
+          </div>
+
+          <!-- CENTER -->
+
+          <div class="fx-mid">
+            <div class="skeleton-shimmer skeleton-score"></div>
+
+            <div class="skeleton-shimmer skeleton-time"></div>
+
+            <div class="skeleton-shimmer skeleton-status"></div>
+          </div>
+
+          <!-- AWAY -->
+
+          <div class="fx-team away">
+            <div class="skeleton-shimmer skeleton-team-logo"></div>
+
+            <div class="skeleton-shimmer skeleton-team-name"></div>
+          </div>
+        </article>
+      }
+    </div>
+  } @else {
+    <!-- ================================================
+         REAL FIXTURES
+         ================================================ -->
+
+    @for (grupo of fixturesByDate(); track grupo.fechaOriginal) {
+      <div class="fecha-seccion-bloque">
+        <span class="jornada-heading jsub">
+          {{ grupo.fechaOriginal | date: "EEEE, d 'DE' MMMM 'DE' yyyy" : '' }}
+        </span>
+
+        <div class="fixtures-grid">
+          @for (match of grupo.partidos; track match.id) {
+            <article class="fx-card" [class.clickable]="isPlayed(match)" (click)="openStats(match)">
+              <!-- LOCAL -->
+
+              <div class="fx-team home">
+                <img
+                  [src]="match.homeTeam?.badgeColor"
+                  [alt]="match.homeTeam?.name ?? 'Equipo'"
+                  loading="lazy"
+                />
+
+                <span>
+                  {{ match.homeTeam?.name ?? 'Equipo' }}
+                </span>
+              </div>
+
+              <!-- CENTRO -->
+
+              <div class="fx-mid">
+                <div class="fx-score">
+                  @if (match.matchState === 1) {
+                    <span class="fx-vs"> VS </span>
+                  } @else {
+                    <span class="fx-goals">
+                      {{ match.localScore }}
+
+                      -
+
+                      {{ match.visitorScore }}
+                    </span>
+                  }
+                </div>
+
+                <span class="fx-time">
+                  {{ match.date | date: 'HH:mm' }}
+                </span>
+
+                @if (match.matchState === 1) {
+                  <span class="fx-pill upcoming"> Programado </span>
+                } @else if (match.matchState === 2) {
+                  <span class="fx-pill live"> En Juego </span>
+                } @else {
+                  <span class="fx-pill finished"> Finalizado </span>
+                }
+              </div>
+
+              <!-- VISITANTE -->
+
+              <div class="fx-team away">
+                <img
+                  [src]="match.awayTeam?.badgeColor"
+                  [alt]="match.awayTeam?.name ?? 'Equipo'"
+                  loading="lazy"
+                />
+
+                <span>
+                  {{ match.awayTeam?.name ?? 'Equipo' }}
+                </span>
+              </div>
+            </article>
+          }
+        </div>
+      </div>
+    } @empty {
+      <div class="calendar-empty">
+        <p>
+          No hay partidos para la Jornada
+          {{ selectedWeek() }}.
+        </p>
+      </div>
+    }
+  }
+</section>
+
+<!-- ============================================================
+     MODAL DE ESTADÍSTICAS DEL PARTIDO
+     ============================================================ -->
+
+<div class="sm-overlay" [class.open]="selectedMatchId() !== null" (click)="closeStats()">
+  <div class="sm-dialog" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+    @if (loadingStats()) {
+      <div class="sm-head">
+        <button class="sm-close" (click)="closeStats()" aria-label="Cerrar">✕</button>
+        <div class="sm-meta">Cargando estadísticas...</div>
+      </div>
+    } @else if (statsError()) {
+      <div class="sm-head">
+        <button class="sm-close" (click)="closeStats()" aria-label="Cerrar">✕</button>
+        <div class="sm-meta">{{ statsError() }}</div>
+      </div>
+    } @else {
+      @if (selectedMatchStats(); as stats) {
+        <div class="sm-head">
+          <button class="sm-close" (click)="closeStats()" aria-label="Cerrar">✕</button>
+
+          <div class="sm-meta">
+            {{ stats.date | date: "EEEE, d 'DE' MMMM" : '' }} · {{ stats.date | date: 'HH:mm' }}
+            <span class="sm-pill finished">Finalizado</span>
+          </div>
+
+          <div class="sm-scoreboard">
+            <div class="sm-club">
+              <img [src]="stats.local.badgeColor" [alt]="stats.local.mainName" loading="lazy" />
+              <b>{{ stats.local.mainName }}</b>
+            </div>
+
+            <div class="sm-score-box">
+              <div class="sm-score">{{ stats.localScore }} - {{ stats.visitorScore }}</div>
+            </div>
+
+            <div class="sm-club">
+              <img [src]="stats.visitor.badgeColor" [alt]="stats.visitor.mainName" loading="lazy" />
+              <b>{{ stats.visitor.mainName }}</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm-body">
+          <!-- COLUMNA LOCAL -->
+          <div class="sm-col sm-home">
+            <div class="sm-col-head">
+              <img [src]="stats.local.badgeColor" alt="" loading="lazy" />
+              <span>{{ stats.local.mainName }}</span>
+              <span class="sm-count">{{ stats.local.players.length }} JUG.</span>
+            </div>
+
+            @for (group of groupPlayersByPosition(stats.local.players); track group.positionId) {
+              <div class="sm-group">
+                <div class="sm-group-label">{{ group.label }}</div>
+
+                @for (player of group.players; track player.id) {
+                  <div class="sm-player" (click)="openPlayerStats(player.id)">
+                    <img
+                      [src]="player.images.transparent['256x256']"
+                      [alt]="player.nickname"
+                      loading="lazy"
+                    />
+
+                    <div class="sm-player-info">
+                      <div class="sm-player-name">
+                        @if (player.id === selectedMatchMvpId()) {
+                          <span class="sm-star">★</span>
+                        }
+                        {{ player.nickname || player.name }}
+                      </div>
+                      <div class="sm-player-sub">{{ group.label }}</div>
+                    </div>
+
+                    <div class="sm-pts" [class]="ptsClass(player.weekPoints)">
+                      {{ player.weekPoints > 0 ? '+' : '' }}{{ player.weekPoints }}
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- COLUMNA VISITANTE -->
+          <div class="sm-col sm-away">
+            <div class="sm-col-head">
+              <img [src]="stats.visitor.badgeColor" alt="" loading="lazy" />
+              <span>{{ stats.visitor.mainName }}</span>
+              <span class="sm-count">{{ stats.visitor.players.length }} JUG.</span>
+            </div>
+
+            @for (group of groupPlayersByPosition(stats.visitor.players); track group.positionId) {
+              <div class="sm-group">
+                <div class="sm-group-label">{{ group.label }}</div>
+
+                @for (player of group.players; track player.id) {
+                  <div class="sm-player" (click)="openPlayerStats(player.id)">
+                    <img
+                      [src]="player.images.transparent['256x256']"
+                      [alt]="player.nickname"
+                      loading="lazy"
+                    />
+
+                    <div class="sm-player-info">
+                      <div class="sm-player-name">
+                        @if (player.id === selectedMatchMvpId()) {
+                          <span class="sm-star">★</span>
+                        }
+                        {{ player.nickname || player.name }}
+                      </div>
+                      <div class="sm-player-sub">{{ group.label }}</div>
+                    </div>
+
+                    <div class="sm-pts" [class]="ptsClass(player.weekPoints)">
+                      {{ player.weekPoints > 0 ? '+' : '' }}{{ player.weekPoints }}
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="sm-head">
+          <button class="sm-close" (click)="closeStats()" aria-label="Cerrar">✕</button>
+          <div class="sm-meta">No hay estadísticas disponibles para este partido.</div>
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<app-player-stats-modal
+  [playerId]="selectedPlayerId"
+  [isOpen]="showPlayerStats"
+  (closeModal)="closePlayerStats()"
+/>

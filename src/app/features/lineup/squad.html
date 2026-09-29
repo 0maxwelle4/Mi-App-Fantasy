@@ -1,0 +1,360 @@
+<!-- ==========================================================
+     PLAYER CARD SKELETON
+     ========================================================== -->
+
+<ng-template #playerCardSkeleton>
+  <article class="card visual-skeleton">
+    <!-- PHOTO -->
+
+    <div class="skeleton-photo">
+      <div class="skeleton-shimmer skeleton-badge"></div>
+    </div>
+
+    <!-- BODY -->
+
+    <div class="skeleton-body">
+      <!-- NAME + CLUB -->
+
+      <div class="skeleton-player-header">
+        <div>
+          <div class="skeleton-shimmer skeleton-name"></div>
+
+          <div class="skeleton-shimmer skeleton-subtitle"></div>
+        </div>
+
+        <div class="skeleton-shimmer skeleton-club"></div>
+      </div>
+
+      <!-- STATS -->
+
+      <div class="skeleton-stats">
+        <div>
+          <div class="skeleton-shimmer skeleton-label"></div>
+
+          <div class="skeleton-shimmer skeleton-value"></div>
+        </div>
+
+        <div>
+          <div class="skeleton-shimmer skeleton-label"></div>
+
+          <div class="skeleton-shimmer skeleton-value"></div>
+        </div>
+      </div>
+
+      <!-- TREND -->
+
+      <div class="skeleton-trend">
+        <div class="skeleton-shimmer skeleton-trend-label"></div>
+
+        <div class="skeleton-shimmer skeleton-trend-value"></div>
+      </div>
+
+      <!-- CLAUSE -->
+
+      <div class="skeleton-clause">
+        <div class="skeleton-shimmer skeleton-label"></div>
+
+        <div class="skeleton-shimmer skeleton-clause-value"></div>
+      </div>
+
+      <!-- BUTTON -->
+
+      <div class="skeleton-shimmer skeleton-button"></div>
+    </div>
+  </article>
+</ng-template>
+
+<!-- ==========================================================
+     HEADER
+     ========================================================== -->
+
+<header class="top">
+  @if (squad(); as currentSquad) {
+    <div>
+      <div class="eyebrow">
+        LIGA ROJA · PLANTILLA ·
+        {{ currentSquad.manager.managerName }}
+      </div>
+
+      <h1 class="title">
+        PLANTILLA
+        {{ currentSquad.manager.managerName }}
+      </h1>
+    </div>
+  } @else {
+    <div>
+      <div class="skeleton-shimmer skeleton-header-small"></div>
+      <div class="skeleton-shimmer skeleton-header-title"></div>
+    </div>
+  }
+
+  <div class="top-actions">
+    <!-- BOTÓN REFRESCAR -->
+    <button
+      type="button"
+      class="refresh-btn"
+      [class.spinning]="loading()"
+      [disabled]="loading()"
+      (click)="refresh()"
+      aria-label="Refrescar plantilla"
+      title="Refrescar plantilla"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="23 4 23 10 17 10" />
+        <polyline points="1 20 1 14 7 14" />
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+      </svg>
+      <span>Refrescar</span>
+    </button>
+  </div>
+</header>
+
+<nav class="nav">
+  <!-- EQUIPO -->
+  <a class="nav-tab" [class.active]="!isPointsPage" [routerLink]="['/squad', teamId]">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+    Plantilla
+  </a>
+  <!-- PUNTOS -->
+  <a class="nav-tab" [class.active]="isPointsPage" [routerLink]="['/squad', teamId, 'points']">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1.5" />
+    </svg>
+    Puntos
+  </a>
+</nav>
+
+<!-- ==========================================================
+     SUMMARY
+     ========================================================== -->
+
+<div class="summary">
+  @if (squad(); as currentSquad) {
+    <div class="metric">
+      <span> JUGADORES </span>
+
+      <strong> {{ currentSquad.playersNumber }} / 24 </strong>
+    </div>
+
+    <div class="metric">
+      <span> PUNTOS </span>
+
+      <strong>
+        {{ currentSquad.teamPoints }}
+      </strong>
+    </div>
+
+    @if (totalDifference24h(); as difference24h) {
+      <div class="metric">
+        <span> PLUSVALÍA </span>
+
+        <strong [class.positive]="difference24h > 0" [class.negative]="difference24h < 0">
+          {{ difference24h | number }}€
+        </strong>
+      </div>
+    }
+
+    <div class="metric">
+      <span> VALOR PLANTILLA </span>
+
+      <strong> {{ currentSquad.teamValue | number }}€ </strong>
+    </div>
+  } @else {
+    @for (i of [1, 2, 3, 4]; track i) {
+      <div class="metric">
+        <div class="skeleton-shimmer skeleton-summary-label"></div>
+
+        <div class="skeleton-shimmer skeleton-summary-value"></div>
+      </div>
+    }
+  }
+</div>
+
+<!-- ==========================================================
+     TABS
+     ========================================================== -->
+
+<div class="tabs">
+  @if (squad(); as currentSquad) {
+    <button class="tab active">TODOS · {{ currentSquad.playersNumber }}</button>
+
+    <button class="tab">PORTEROS · {{ positionCounts().porters }}</button>
+
+    <button class="tab">DEFENSAS · {{ positionCounts().defenders }}</button>
+
+    <button class="tab">MEDIOS · {{ positionCounts().midfielders }}</button>
+
+    <button class="tab">DELANTEROS · {{ positionCounts().forwards }}</button>
+
+    <button class="tab">ENTRENADORES · {{ positionCounts().coaches }}</button>
+  }
+</div>
+
+<!-- ==========================================================
+     TOOLBAR
+     ========================================================== -->
+
+<div class="toolbar">
+  <input
+    class="search"
+    placeholder="Buscar en mi plantilla..."
+    [disabled]="loading()"
+    (input)="searchName.set($any($event.target).value)"
+  />
+
+  <select class="sort" [disabled]="loading()" (change)="sortBy.set($any($event.target).value)">
+    <option value="NONE">Ordenar: Valor</option>
+
+    <option value="POINTS_DESC">Puntos</option>
+
+    <option value="TREND_DESC">Tendencia</option>
+  </select>
+
+  <div class="bulk-actions">
+    <button
+      type="button"
+      class="btn blue"
+      [disabled]="loading()"
+      (click)="openAddAllConfirmation()"
+    >
+      AÑADIR TODOS AL MERCADO
+    </button>
+
+    <button
+      type="button"
+      class="btn red"
+      [disabled]="loading()"
+      (click)="openRemoveAllConfirmation()"
+    >
+      QUITAR TODOS DEL MERCADO
+    </button>
+  </div>
+</div>
+
+<!-- ==========================================================
+     PLAYERS
+     ========================================================== -->
+
+<section class="section">
+  <div class="section-head">
+    <span class="small"> Gestiona jugadores, cláusulas y mercado </span>
+  </div>
+
+  <div class="grid">
+    @if (loading()) {
+      @for (i of skeletons; track i) {
+        <ng-container [ngTemplateOutlet]="playerCardSkeleton" />
+      }
+    } @else {
+      @for (player of filteredPlayers(); track player.playerMaster.id) {
+        <app-player-card
+          [players]="player"
+          [config]="{
+            isOwnPlayer: squad()?.teamMoney != null,
+            isMarketOpen: !!player.playerMarket,
+            hasShieldsAvailable: getNumShields() < 2,
+          }"
+          (onAddToMarketClick)="onAddToMarketClick($event)"
+          (onRemoveFromMarket)="removeFromMarket($event.marketId)"
+          (onRaiseClauseClick)="onRaiseClauseClick($event)"
+          (onBid)="onPlayerBid($event)"
+          (onModifyBid)="onPlayerModifyBid($event)"
+          (onCancelBid)="onPlayerCancelBid($event)"
+          (onBuyoutClick)="onPlayerBuyout($event)"
+        />
+      } @empty {
+        <div class="empty-state">No se encontraron jugadores.</div>
+      }
+    }
+  </div>
+</section>
+
+<!-- ==========================================================
+     PLAYER MODAL (Aumentar Cláusula / Añadir al Mercado / Pujar)
+     ========================================================== -->
+
+@if (selectedPlayer(); as player) {
+  <app-player-modal
+    [isOpen]="isModalOpen()"
+    [player]="player"
+    [initialAction]="modalAction()"
+    (closed)="closeModal()"
+    (raiseClause)="onRaiseClauseSubmit($event)"
+    (addToMarket)="onAddToMarketSubmit($event)"
+    (buyOffer)="onBuyOffer($event)"
+    (modifyBid)="onModifyBid($event)"
+    (cancelBid)="onCancelBid()"
+  />
+}
+
+<!-- ==========================================================
+     CONFIRMACIÓN AUMENTAR CLÁUSULA
+     ========================================================== -->
+
+<app-confirmation-modal
+  [isOpen]="buyoutConfirmationOpen()"
+  [title]="buyoutConfirmationTitle()"
+  [description]="buyoutConfirmationDescription()"
+  [player]="buyoutConfirmationPlayer()"
+  eyebrow="⚠️ EJECUTAR CLÁUSULA"
+  confirmText="Ejecutar Cláusula"
+  cancelText="Cancelar"
+  (confirmed)="onBuyoutConfirmed()"
+  (cancelled)="onBuyoutCancelled()"
+/>
+
+<!-- ==========================================================
+     CONFIRMACIÓN AÑADIR TODOS AL MERCADO
+     ========================================================== -->
+
+<app-confirmation-modal
+  [isOpen]="addAllConfirmationOpen()"
+  title="¿Añadir todos al mercado?"
+  [description]="addAllConfirmationDescription()"
+  eyebrow="📈 AÑADIR TODOS"
+  confirmText="Añadir Todos"
+  cancelText="Cancelar"
+  (confirmed)="onAddAllConfirmed()"
+  (cancelled)="onAddAllCancelled()"
+/>
+
+<!-- ==========================================================
+     CONFIRMACIÓN QUITAR TODOS DEL MERCADO
+     ========================================================== -->
+
+<app-confirmation-modal
+  [isOpen]="removeAllConfirmationOpen()"
+  title="¿Quitar todos del mercado?"
+  [description]="removeAllConfirmationDescription()"
+  eyebrow="⚠️ QUITAR TODOS"
+  confirmText="Quitar Todos"
+  cancelText="Cancelar"
+  (confirmed)="onRemoveAllConfirmed()"
+  (cancelled)="onRemoveAllCancelled()"
+/>

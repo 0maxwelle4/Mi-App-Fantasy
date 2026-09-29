@@ -1,0 +1,176 @@
+<div class="modal-overlay" [class.open]="isOpen" (click)="onOverlayClick($event)">
+  @if (isOpen) {
+    <div class="offer-modal">
+      <div class="offer-modal-head">
+        <div style="padding: 26px 24px 0">
+          <button class="modal-close" type="button" (click)="close()">✕</button>
+        </div>
+
+        <span class="eyebrow">
+          @if (currentAction() === 'modify-bid') {
+            MODIFICAR PUJA
+          } @else if (currentAction() === 'raise-clause') {
+            AUMENTAR CLÁUSULA
+          } @else if (currentAction() === 'add-to-market') {
+            AÑADIR AL MERCADO
+          } @else {
+            PUJA POR JUGADOR
+          }
+        </span>
+
+        <h2>
+          @if (currentAction() === 'modify-bid') {
+            Modificar puja de
+          } @else if (currentAction() === 'raise-clause') {
+            Aumentar cláusula de
+          } @else if (currentAction() === 'add-to-market') {
+            Añadir al mercado a
+          } @else {
+            Puja de
+          }
+
+          {{ player.playerMaster.name }}
+        </h2>
+      </div>
+
+      <div class="offer-modal-body">
+        <div class="offer-modal-player">
+          <div class="offer-modal-photo">
+            <img
+              [src]="player.playerMaster.images.transparent['256x256']"
+              [alt]="player.playerMaster.name"
+            />
+          </div>
+
+          <div>
+            <span class="pos-chip">
+              {{ player.playerMaster.positionId }}
+            </span>
+
+            <h3>
+              {{ player.playerMaster.name }}
+            </h3>
+
+            @if (player.playerMaster.team) {
+              <p>
+                {{ player.playerMaster.team.name }}
+              </p>
+            }
+          </div>
+        </div>
+
+        <div class="offer-modal-stats">
+          <div>
+            <span> Valor de Mercado </span>
+
+            <strong> {{ player.playerMaster.marketValue | number }}€ </strong>
+          </div>
+
+          @if (currentAction() === 'add-to-market') {
+            <!-- Sin segundo dato -->
+          } @else if (currentAction() === 'raise-clause' || isDirectOffer()) {
+            <div>
+              <span> Cláusula Actual </span>
+
+              <strong> {{ buyoutClause() | number }}€ </strong>
+            </div>
+          } @else {
+            <div>
+              <span> Puja mínima </span>
+
+              <strong> {{ player.playerMaster.marketValue | number }}€ </strong>
+            </div>
+          }
+        </div>
+
+        <label class="offer-amount-label" for="offerAmount">
+          @if (currentAction() === 'raise-clause') {
+            Cantidad
+          } @else if (currentAction() === 'add-to-market') {
+            Precio de venta
+          } @else {
+            Cantidad a ofrecer
+          }
+        </label>
+
+        <div class="offer-amount-input">
+          <span> € </span>
+
+          <input
+            type="text"
+            id="offerAmount"
+            name="offerAmount"
+            inputmode="numeric"
+            placeholder="Inserte cantidad..."
+            [value]="amount ? amount.toLocaleString('es-ES') : ''"
+            (input)="
+              amount = $any($event.target).value.replace(/\D/g, '')
+                ? +$any($event.target).value.replace(/\D/g, '')
+                : null
+            "
+          />
+        </div>
+
+        @if (currentAction() === 'add-to-market') {
+          <!-- Sin fila de mínimos/máximos -->
+        } @else if (currentAction() === 'raise-clause') {
+          <div style="margin-bottom: 20px; display: flex; justify-content: space-around">
+            <div class="maxMinBind">
+              <span> Nueva Cláusula: </span>
+
+              <strong> {{ newClauseAmount() | number }}€ </strong>
+            </div>
+          </div>
+        } @else if (isDirectOffer()) {
+          <div style="margin-bottom: 20px; display: flex; justify-content: space-around">
+            <div class="maxMinBind">
+              <span> Puja máxima: </span>
+
+              <strong> {{ teamMoney() | number }}€ </strong>
+            </div>
+          </div>
+        } @else {
+          <div style="margin-bottom: 20px; display: flex; justify-content: space-around">
+            <div class="maxMinBind">
+              <span> Puja mínima: </span>
+
+              <strong> {{ player.playerMaster.marketValue | number }}€ </strong>
+            </div>
+
+            <div class="maxMinBind">
+              <span> Puja máxima: </span>
+
+              <strong> {{ maxBid() | number: '1.0-0' }}€ </strong>
+            </div>
+          </div>
+        }
+
+        <div class="offer-modal-actions">
+          <button
+            class="offer-btn primary"
+            type="button"
+            (click)="submit()"
+            [class.disabled]="!isValidAmount()"
+            [disabled]="!isValidAmount()"
+          >
+            @if (currentAction() === 'modify-bid') {
+              MODIFICAR PUJA
+            } @else if (currentAction() === 'raise-clause') {
+              Aumentar Cláusula
+            } @else if (currentAction() === 'add-to-market') {
+              Añadir a Mercado
+            } @else {
+              Realizar Oferta de Compra
+            }
+          </button>
+        </div>
+
+        <div class="offer-budget">
+          Tu presupuesto:
+
+          <strong> {{ teamMoney() | number }}€ </strong>
+        </div>
+      </div>
+    </div>
+  }
+</div>

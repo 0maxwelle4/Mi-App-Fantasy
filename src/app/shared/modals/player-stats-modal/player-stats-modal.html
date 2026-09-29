@@ -1,0 +1,280 @@
+@if (isOpen) {
+  <div class="modal-overlay" (click)="onBackdropClick()">
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-box" (click)="stopPropagation($event)">
+      <!-- ===================== -->
+      <!-- LOADING -->
+      <!-- ===================== -->
+
+      @if (loading()) {
+        <div class="modal-loading">
+          <div class="spinner"></div>
+          <span>Cargando estadísticas...</span>
+        </div>
+      }
+
+      <!-- ===================== -->
+      <!-- ERROR -->
+      <!-- ===================== -->
+
+      @if (!loading() && error()) {
+        <div class="modal-error">
+          <strong>Error</strong>
+
+          <span>
+            {{ error() }}
+          </span>
+
+          <button type="button" (click)="close()">Cerrar</button>
+        </div>
+      }
+
+      <!-- ===================== -->
+      <!-- CONTENIDO -->
+      <!-- ===================== -->
+
+      @if (!loading() && !error() && player()) {
+        @let team = player() ? getTeam(player()?.teamId) : undefined;
+        <!-- ===================== -->
+        <!-- HEADER -->
+        <!-- ===================== -->
+
+        <div class="modal-head">
+          <div class="modal-photo">
+            @if (getPlayerImage()) {
+              <img class="face" [src]="getPlayerImage()!" [alt]="getPlayerName()" />
+            }
+
+            <img class="crest" [src]="team?.badgeColor" [alt]="team?.name" />
+          </div>
+
+          <div class="modal-head-info">
+            <h2>
+              {{ getPlayerNickname() }}
+            </h2>
+
+            <div class="small">
+              {{ getPlayerPosition() }}
+              · {{ team?.name }} · {{ getPlayerMarketValue() | number }}€
+            </div>
+          </div>
+
+          <button type="button" class="modal-close" (click)="close()" aria-label="Cerrar">×</button>
+        </div>
+
+        <!-- ===================== -->
+        <!-- BODY -->
+        <!-- ===================== -->
+
+        <div class="modal-body">
+          <!-- ===================== -->
+          <!-- RESUMEN -->
+          <!-- ===================== -->
+
+          <div class="modal-summary">
+            <div class="m-metric">
+              <span>PUNTOS TOTALES</span>
+
+              <strong>
+                {{ getPlayerTotalPoints() }}
+              </strong>
+            </div>
+
+            <div class="m-metric">
+              <span>MEDIA / JORNADA</span>
+
+              <strong>
+                {{ getPlayerAveragePoints() }}
+              </strong>
+            </div>
+
+            <div class="m-metric">
+              <span>T. PASADA</span>
+
+              <strong>
+                {{ getPlayerLastSeasonPoints() }}
+              </strong>
+            </div>
+
+            <div class="m-metric">
+              <span>CLÁUSULA</span>
+
+              <strong class="clause-value">
+                {{ getBuyoutClause() | number }}
+                €
+              </strong>
+            </div>
+          </div>
+
+          <!-- ===================== -->
+          <!-- NOTA POSICIÓN -->
+          <!-- ===================== -->
+
+          <div class="modal-note">
+            Posición
+
+            <strong>
+              {{ getPlayerPosition() | uppercase }}
+            </strong>
+
+            · {{ getPositionDescription() }}
+          </div>
+
+          <!-- ===================== -->
+          <!-- TENDENCIES -->
+          <!-- ===================== -->
+
+          <div class="trend">
+            <div class="trend-head">
+              <span class="trend-label">Valor de mercado · 24h</span>
+              <span class="trend-pill" [class.up]="esPositivo()" [class.down]="!esPositivo()">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path *ngIf="esPositivo()" d="M12 19V5M5 12l7-7 7 7" />
+                  <path *ngIf="!esPositivo()" d="M12 5v14M19 12l-7 7-7-7" />
+                </svg>
+                {{ porcentaje() | number: '1.1-2' }}% · {{ variacion() >= 0 ? '+' : ''
+                }}{{ variacion() | number }}€
+              </span>
+            </div>
+
+            <svg viewBox="0 0 120 50" preserveAspectRatio="none" class="trend-chart">
+              <defs>
+                <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" [attr.stop-color]="color()" stop-opacity=".35" />
+                  <stop offset="100%" [attr.stop-color]="color()" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <path [attr.d]="pathArea()" fill="url(#trendGradient)" />
+              <path
+                [attr.d]="pathLine()"
+                fill="none"
+                [attr.stroke]="color()"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <circle
+                [attr.cx]="115"
+                [attr.cy]="esPositivo() ? 8 : 42"
+                r="3.5"
+                [attr.fill]="color()"
+              />
+            </svg>
+
+            <div class="trend-labels">
+              <span>-24H</span>
+              <span>Ahora</span>
+            </div>
+          </div>
+
+          <!-- ===================== -->
+          <!-- JORNADAS -->
+          <!-- ===================== -->
+
+          @if (weeks().length > 0) {
+            <div class="fixture-picker">
+              @for (week of weeks(); track trackByWeek($index, week)) {
+                <button
+                  type="button"
+                  class="fixture-box"
+                  [class.active]="isWeekSelected(week)"
+                  [style.--fill.%]="getPointsPercentage(week)"
+                  [style.--fill-color]="getPointsFillColor(week)"
+                  (click)="selectWeek(week)"
+                >
+                  <span class="fb-label">J{{ getWeekNumber(week) }}</span>
+                  <span class="fb-points">{{ getWeekPoints(week) }}</span>
+                </button>
+              }
+            </div>
+          }
+
+          <!-- ===================== -->
+          <!-- PANEL JORNADA -->
+          <!-- ===================== -->
+
+          @if (selectedWeekData()) {
+            <div class="week-panel">
+              <!-- HEADER JORNADA -->
+
+              <div class="week-panel-head">
+                <span class="wp-label">
+                  Jornada
+                  {{ getWeekNumber(selectedWeekData()) }}
+
+                  ·
+
+                  {{ getWeekMinutes(selectedWeekData()) }}
+                  min jugados ·
+
+                  @if (isIdealFormation(selectedWeekData())) {
+                    En el once ideal
+                  } @else {
+                    Fuera del once ideal
+                  }
+                </span>
+              </div>
+
+              <!-- STATS -->
+
+              <div class="stat-cards">
+                @for (stat of stats(); track trackByStat($index, stat)) {
+                  @if (stat.value !== 0 || stat.points !== 0) {
+                    <div class="stat-card" [class.is-zero]="getStatValue(stat) === 0">
+                      <span class="sc-label">
+                        {{ getStatLabel(stat) }}
+                      </span>
+
+                      <div class="sc-row">
+                        <span class="sc-amount">
+                          {{ getStatValue(stat) }}
+                        </span>
+
+                        <span class="sc-points" [class]="getPointsClass(getStatPoints(stat))">
+                          @if (getStatPoints(stat) > 0) {
+                            +
+                          }
+
+                          {{ getStatPoints(stat) }}
+                        </span>
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+
+              <!-- TOTAL -->
+
+              <div class="week-total">
+                <span>
+                  Total Jornada
+                  {{ getWeekNumber(selectedWeekData()) }}
+                </span>
+
+                <strong>
+                  {{ getWeekPoints(selectedWeekData()) }}
+                  PTS
+                </strong>
+              </div>
+            </div>
+          }
+
+          <!-- ===================== -->
+          <!-- SIN STATS -->
+          <!-- ===================== -->
+
+          @if (weeks().length === 0) {
+            <div class="empty-stats">No hay estadísticas disponibles para este jugador.</div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

@@ -1,0 +1,558 @@
+<main class="app">
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="top">
+    <div>
+      <div class="eyebrow">LIGA ROJA · PUNTOS · TODAS LAS JORNADAS</div>
+
+      <h1 class="title">PUNTOS {{ managerName() }}</h1>
+    </div>
+
+    <div class="top-right">
+      <div class="top-stat">
+        <span> PUNTOS TOTALES </span>
+
+        <strong>
+          {{ totalPoints() }}
+        </strong>
+      </div>
+
+      <div class="top-stat">
+        <span> MEDIA / JORNADA </span>
+
+        <strong>
+          {{ averagePoints() | number: '1.1-1' }}
+        </strong>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <!-- EQUIPO -->
+    <a class="nav-tab" [class.active]="!isPointsPage" [routerLink]="['/squad', teamId]">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+      Plantilla
+    </a>
+    <!-- PUNTOS -->
+    <a class="nav-tab" [class.active]="isPointsPage" [routerLink]="['/squad', teamId, 'points']">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="5" />
+        <circle cx="12" cy="12" r="1.5" />
+      </svg>
+      Puntos
+    </a>
+  </nav>
+
+  <!-- =====================================================
+       INFO JORNADA
+  ====================================================== -->
+
+  <div class="matchday-bar">
+    <div class="matchday-box">
+      <span> JORNADAS </span>
+
+      <strong>
+        {{ jornadas().length }}
+      </strong>
+    </div>
+
+    <div class="matchday-box">
+      <span> JORNADA SELECCIONADA </span>
+
+      <strong>
+        J{{ selectedWeek() }}
+
+        @if (selectedWeek() === currentWeek()) {
+          <span class="live-pill"> EN VIVO </span>
+        }
+      </strong>
+    </div>
+
+    <div class="matchday-box">
+      <span> PUNTOS JORNADA </span>
+
+      <strong>
+        {{ selectedWeekPoints() }}
+      </strong>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       JORNADAS
+  ====================================================== -->
+
+  <div class="jornada-bar">
+    @for (jornada of jornadas(); track jornada.number) {
+      <button
+        type="button"
+        class="jornada-tab"
+        [class.active]="selectedWeek() === jornada.number"
+        [class.live]="jornada.status === 'live'"
+        (click)="selectWeek(jornada.number)"
+      >
+        <strong>
+          {{ jornada.id }}
+        </strong>
+
+        <span>
+          {{ weekResponsesPoints(jornada.number) }}
+        </span>
+      </button>
+    }
+  </div>
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  @if (loading()) {
+    <section class="loading-card">
+      <div class="loading-spinner"></div>
+
+      <span> CARGANDO PUNTOS... </span>
+    </section>
+  }
+
+  <!-- =====================================================
+       ERROR
+  ====================================================== -->
+
+  @if (!loading() && error()) {
+    <section class="error-card">
+      <strong> ERROR </strong>
+
+      <span>
+        {{ error() }}
+      </span>
+    </section>
+  }
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  @if (!loading() && !error()) {
+    <div class="main-grid">
+      <!-- =================================================
+           PITCH
+      ================================================== -->
+
+      <section class="card pitch-card">
+        <div class="pitch-toolbar">
+          <div class="team-heading">
+            <div class="team-heading-logo">
+              <span>MF</span>
+            </div>
+
+            <div>
+              <h2>Mi equipo</h2>
+
+              <p>
+                J{{ selectedWeek() }}
+                · PUNTOS POR JUGADOR
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===========================
+             PITCH
+        ============================ -->
+
+        <div class="pitch">
+          <div class="pitch-center-line"></div>
+
+          <div class="center-circle"></div>
+
+          <div class="center-dot"></div>
+
+          <div class="penalty top"></div>
+
+          <div class="penalty bottom"></div>
+
+          <div class="goal top"></div>
+
+          <div class="goal bottom"></div>
+
+          <!-- DELANTEROS -->
+
+          <div class="formation-row row-striker">
+            @for (player of strikers(); track player.playerMaster.id) {
+              @let team = player ? getTeam(player.playerMaster.teamId) : undefined;
+              <button
+                type="button"
+                class="pitch-player"
+                [attr.aria-label]="'Ver estadísticas de ' + getFullPlayerName(player)"
+                (click)="openPlayerStats(player.playerMaster.id)"
+              >
+                <div class="player-card-visual">
+                  <span class="position-badge">
+                    {{ getPositionShort(player) }}
+                  </span>
+
+                  <span
+                    class="corner-badge"
+                    [class.pos]="getPointClass(player) === 'pos'"
+                    [class.neg]="getPointClass(player) === 'neg'"
+                    [class.zero]="getPointClass(player) === 'zero'"
+                    [class.pending]="getPointClass(player) === 'pending'"
+                  >
+                    {{ getPointLabel(player) }}
+                  </span>
+
+                  <img
+                    class="player-image"
+                    [src]="getPlayerImage(player)"
+                    [alt]="getFullPlayerName(player)"
+                    loading="lazy"
+                  />
+
+                  <div class="club-crest">
+                    @if (team) {
+                      <img [src]="team.badgeColor" [alt]="team.name" loading="lazy" />
+                    } @else {
+                      <span class="club-fallback">
+                        {{ player.playerMaster.teamId }}
+                      </span>
+                    }
+                  </div>
+
+                  <!--<span class="called-check"> ✓ </span>-->
+
+                  <span class="edit-label"> VER PUNTOS </span>
+                </div>
+
+                <div class="player-info">
+                  <div class="player-name">
+                    {{ getPlayerName(player) }}
+                  </div>
+
+                  <div class="player-team">
+                    {{ player.playerMaster.position }}
+                  </div>
+                </div>
+              </button>
+            }
+          </div>
+
+          <!-- CENTROCAMPISTAS -->
+
+          <div class="formation-row row-midfield">
+            @for (player of midfielders(); track player.playerMaster.id) {
+              @let team = player ? getTeam(player.playerMaster.teamId) : undefined;
+              <button
+                type="button"
+                class="pitch-player"
+                (click)="openPlayerStats(player.playerMaster.id)"
+              >
+                <div class="player-card-visual">
+                  <span class="position-badge">
+                    {{ getPositionShort(player) }}
+                  </span>
+
+                  <span
+                    class="corner-badge"
+                    [class.pos]="getPointClass(player) === 'pos'"
+                    [class.neg]="getPointClass(player) === 'neg'"
+                    [class.zero]="getPointClass(player) === 'zero'"
+                    [class.pending]="getPointClass(player) === 'pending'"
+                  >
+                    {{ getPointLabel(player) }}
+                  </span>
+
+                  <img
+                    class="player-image"
+                    [src]="getPlayerImage(player)"
+                    [alt]="getFullPlayerName(player)"
+                    loading="lazy"
+                  />
+
+                  <div class="club-crest">
+                    @if (team) {
+                      <img [src]="team.badgeColor" [alt]="team.name" loading="lazy" />
+                    } @else {
+                      <span class="club-fallback">
+                        {{ player.playerMaster.teamId }}
+                      </span>
+                    }
+                  </div>
+
+                  <!--<span class="called-check"> ✓ </span>-->
+
+                  <span class="edit-label"> VER PUNTOS </span>
+                </div>
+
+                <div class="player-info">
+                  <div class="player-name">
+                    {{ getPlayerName(player) }}
+                  </div>
+
+                  <div class="player-team">
+                    {{ player.playerMaster.position }}
+                  </div>
+                </div>
+              </button>
+            }
+          </div>
+
+          <!-- DEFENSAS -->
+
+          <div class="formation-row row-defence">
+            @for (player of defenders(); track player.playerMaster.id) {
+              @let team = player ? getTeam(player.playerMaster.teamId) : undefined;
+              <button
+                type="button"
+                class="pitch-player"
+                (click)="openPlayerStats(player.playerMaster.id)"
+              >
+                <div class="player-card-visual">
+                  <span class="position-badge">
+                    {{ getPositionShort(player) }}
+                  </span>
+
+                  <span
+                    class="corner-badge"
+                    [class.pos]="getPointClass(player) === 'pos'"
+                    [class.neg]="getPointClass(player) === 'neg'"
+                    [class.zero]="getPointClass(player) === 'zero'"
+                    [class.pending]="getPointClass(player) === 'pending'"
+                  >
+                    {{ getPointLabel(player) }}
+                  </span>
+
+                  <img
+                    class="player-image"
+                    [src]="getPlayerImage(player)"
+                    [alt]="getFullPlayerName(player)"
+                    loading="lazy"
+                  />
+
+                  <div class="club-crest">
+                    @if (team) {
+                      <img [src]="team.badgeColor" [alt]="team.name" loading="lazy" />
+                    } @else {
+                      <span class="club-fallback">
+                        {{ player.playerMaster.teamId }}
+                      </span>
+                    }
+                  </div>
+
+                  <!--<span class="called-check"> ✓ </span>-->
+
+                  <span class="edit-label"> VER PUNTOS </span>
+                </div>
+
+                <div class="player-info">
+                  <div class="player-name">
+                    {{ getPlayerName(player) }}
+                  </div>
+
+                  <div class="player-team">
+                    {{ player.playerMaster.position }}
+                  </div>
+                </div>
+              </button>
+            }
+          </div>
+
+          <!-- PORTERO -->
+
+          <div class="formation-row row-goalkeeper">
+            @if (goalkeeper(); as player) {
+              @let team = player ? getTeam(player.playerMaster.teamId) : undefined;
+              <button
+                type="button"
+                class="pitch-player"
+                (click)="openPlayerStats(player.playerMaster.id)"
+              >
+                <div class="player-card-visual">
+                  <span class="position-badge">
+                    {{ getPositionShort(player) }}
+                  </span>
+
+                  <span
+                    class="corner-badge"
+                    [class.pos]="getPointClass(player) === 'pos'"
+                    [class.neg]="getPointClass(player) === 'neg'"
+                    [class.zero]="getPointClass(player) === 'zero'"
+                    [class.pending]="getPointClass(player) === 'pending'"
+                  >
+                    {{ getPointLabel(player) }}
+                  </span>
+
+                  <img
+                    class="player-image"
+                    [src]="getPlayerImage(player)"
+                    [alt]="getFullPlayerName(player)"
+                    loading="lazy"
+                  />
+
+                  <div class="club-crest">
+                    @if (team) {
+                      <img [src]="team.badgeColor" [alt]="team.name" loading="lazy" />
+                    } @else {
+                      <span class="club-fallback">
+                        {{ player.playerMaster.teamId }}
+                      </span>
+                    }
+                  </div>
+
+                  <!--<span class="called-check"> ✓ </span>-->
+
+                  <span class="edit-label"> VER PUNTOS </span>
+                </div>
+
+                <div class="player-info">
+                  <div class="player-name">
+                    {{ getPlayerName(player) }}
+                  </div>
+
+                  <div class="player-team">
+                    {{ player.playerMaster.position }}
+                  </div>
+                </div>
+              </button>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================
+           SIDE
+      ================================================== -->
+
+      <aside class="side">
+        <!-- RESUMEN -->
+
+        <section class="card side-card">
+          <div class="side-header">
+            <h3>RESUMEN</h3>
+
+            <span> J{{ selectedWeek() }} </span>
+          </div>
+
+          <div class="summary-grid">
+            <div class="summary-box">
+              <span> JORNADA </span>
+
+              <strong> J{{ selectedWeek() }} </strong>
+            </div>
+
+            <div class="summary-box">
+              <span> PUNTOS </span>
+
+              <strong>
+                {{ selectedWeekPoints() }}
+              </strong>
+            </div>
+
+            <div class="summary-box">
+              <span> JUGADORES </span>
+
+              <strong>
+                {{ playerCount() }}
+              </strong>
+            </div>
+
+            <div class="summary-box">
+              <span> MEDIA </span>
+
+              <strong>
+                {{ averagePoints() | number: '1.1-1' }}
+              </strong>
+            </div>
+          </div>
+        </section>
+
+        <!-- HISTORIAL -->
+
+        <section class="card side-card">
+          <div class="side-header">
+            <h3>HISTORIAL</h3>
+
+            <span> JORNADAS </span>
+          </div>
+
+          <div class="jornada-history">
+            @for (jornada of jornadas(); track jornada.number) {
+              <button
+                type="button"
+                class="jornada-row"
+                [class.active]="selectedWeek() === jornada.number"
+                (click)="selectWeek(jornada.number)"
+              >
+                <span class="jr-label">
+                  {{ jornada.id }}
+                </span>
+
+                <span
+                  class="jr-points"
+                  [class.pos]="weekResponsesPoints(jornada.number) > 0"
+                  [class.neg]="weekResponsesPoints(jornada.number) < 0"
+                  [class.pending]="jornada.status === 'live'"
+                >
+                  @if (jornada.status === 'live') {
+                    EN VIVO
+                  } @else {
+                    {{ weekResponsesPoints(jornada.number) }}
+                  }
+                </span>
+              </button>
+            }
+          </div>
+        </section>
+
+        <!-- LEYENDA -->
+
+        <section class="card side-card">
+          <div class="side-header">
+            <h3>LEYENDA</h3>
+          </div>
+
+          <div class="help">
+            <strong> Clic en cualquier jugador </strong>
+
+            para abrir tu modal de estadísticas.
+
+            <br /><br />
+
+            <span class="legend-positive"> Verde </span>
+            = jornada positiva ·
+
+            <span class="legend-negative"> Rojo </span>
+            = jornada negativa ·
+
+            <span class="legend-pending"> Amarillo </span>
+            = jornada en juego o pendiente.
+          </div>
+        </section>
+      </aside>
+    </div>
+  }
+</main>
+
+<app-player-stats-modal
+  [playerId]="selectedPlayerId"
+  [isOpen]="showPlayerStats"
+  (closeModal)="closePlayerStats()"
+/>

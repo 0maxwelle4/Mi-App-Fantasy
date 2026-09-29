@@ -1,0 +1,302 @@
+<header class="top">
+  @if (!loadingMarket()) {
+    <div>
+      <div class="eyebrow">LIGA ROJA · MERCADO · ACTUALIZADO AHORA</div>
+
+      <h1 class="title">MERCADO</h1>
+    </div>
+
+    <!-- BOTON REFRESCAR -->
+    <button
+      type="button"
+      class="refresh-btn"
+      [class.spinning]="loading() || marketLoading()"
+      [disabled]="loading() || marketLoading()"
+      (click)="refresh()"
+      aria-label="Refrescar movimientos"
+      title="Refrescar movimientos"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="23 4 23 10 17 10"></polyline>
+        <polyline points="1 20 1 14 7 14"></polyline>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+      </svg>
+      <span>Refrescar</span>
+    </button>
+  } @else {
+    <div>
+      <div class="skeleton-shimmer market-header-eyebrow"></div>
+
+      <div class="skeleton-shimmer market-header-title"></div>
+    </div>
+
+    <div class="money">
+      <div class="skeleton-shimmer market-header-money"></div>
+    </div>
+  }
+</header>
+
+<!-- ============================================================
+     NAV
+============================================================= -->
+
+<nav class="nav">
+  <span class="nav-tab active">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="8" cy="21" r="1" />
+      <circle cx="19" cy="21" r="1" />
+
+      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 2-1.58l1.65-7.42H5.12" />
+    </svg>
+
+    Mercado
+  </span>
+
+  <a class="nav-tab" [routerLink]="['/market', preSelectedLeagueId(), 'offers']">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path
+        d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"
+      />
+
+      <circle cx="7.5" cy="7.5" r="1" fill="currentColor" />
+    </svg>
+
+    Ofertas de la Liga
+  </a>
+</nav>
+
+<!-- ============================================================
+     SUMMARY
+============================================================= -->
+
+<div class="summary">
+  <div class="metric">
+    <span> EN MERCADO </span>
+
+    @if (loadingMarket()) {
+      <div class="skeleton-shimmer market-summary-value"></div>
+    } @else {
+      <strong>
+        {{ playersMarket().length }}
+      </strong>
+    }
+  </div>
+
+  <div class="metric">
+    <span> PUJAS ACTIVAS </span>
+
+    @if (loadingMarket()) {
+      <div class="skeleton-shimmer market-summary-value"></div>
+    } @else {
+      <strong> {{ activeBidsCount() }} </strong>
+    }
+  </div>
+
+  <div class="metric">
+    <span> MI PRESUPUESTO </span>
+
+    <strong> {{ teamMoney() | number }}€ </strong>
+  </div>
+
+  <div class="metric">
+    <span> VALOR PLANTILLA </span>
+    <strong> {{ teamValue() | number }}€ </strong>
+  </div>
+</div>
+
+<!-- ============================================================
+     TOOLBAR
+============================================================= -->
+
+<div class="toolbar">
+  <input
+    class="search"
+    placeholder="Buscar jugador, club o posición..."
+    [ngModel]="searchQuery()"
+    (ngModelChange)="searchQuery.set($event)"
+  />
+
+  <button
+    class="filter"
+    [class.active]="selectedPosition() === 'TODOS'"
+    (click)="selectedPosition.set('TODOS')"
+  >
+    TODOS
+  </button>
+  <button
+    class="filter"
+    [class.active]="selectedPosition() === 'PORTERO'"
+    (click)="selectedPosition.set('PORTERO')"
+  >
+    PORTEROS
+  </button>
+  <button
+    class="filter"
+    [class.active]="selectedPosition() === 'DEFENSA'"
+    (click)="selectedPosition.set('DEFENSA')"
+  >
+    DEFENSAS
+  </button>
+  <button
+    class="filter"
+    [class.active]="selectedPosition() === 'MEDIO'"
+    (click)="selectedPosition.set('MEDIO')"
+  >
+    MEDIOS
+  </button>
+  <button
+    class="filter"
+    [class.active]="selectedPosition() === 'DELANTERO'"
+    (click)="selectedPosition.set('DELANTERO')"
+  >
+    DELANTEROS
+  </button>
+
+  <select class="sort" [ngModel]="selectedSort()" (ngModelChange)="selectedSort.set($event)">
+    <option value="recent">Más recientes</option>
+    <option value="value">Mayor valor</option>
+    <option value="trend">Mayor subida</option>
+    <option value="points">Mayor puntuación</option>
+    <option value="price-low">Menor precio</option>
+  </select>
+</div>
+
+<!-- ============================================================
+     NOTICE
+============================================================= -->
+
+<div class="notice">
+  Mercado abierto · Revisa tus pujas antes del cierre. Los jugadores también pueden ser objetivo de
+  clausulazos según las reglas de la liga.
+</div>
+
+<!-- ============================================================
+     MARKET
+============================================================= -->
+
+<section class="section">
+  <div class="section-head">
+    <h2>OPORTUNIDADES</h2>
+
+    <span class="small">
+      @if (loadingMarket()) {
+        Cargando jugadores...
+      } @else {
+        {{ playersMarket().length }}
+        jugadores
+      }
+    </span>
+  </div>
+
+  <div class="grid">
+    @if (loadingMarket()) {
+      @for (i of skeletonPlayers; track i) {
+        <article class="card market-player-skeleton">
+          <div class="photo">
+            <div class="skeleton-shimmer market-player-badge"></div>
+
+            <div class="skeleton-shimmer market-player-image"></div>
+          </div>
+
+          <div class="body">
+            <div class="name">
+              <div>
+                <div class="skeleton-shimmer market-player-name"></div>
+
+                <div class="skeleton-shimmer market-player-team"></div>
+              </div>
+
+              <div class="skeleton-shimmer market-player-club"></div>
+            </div>
+
+            <div class="stats">
+              <div>
+                <div class="skeleton-shimmer market-stat-label"></div>
+
+                <div class="skeleton-shimmer market-stat-value"></div>
+              </div>
+
+              <div>
+                <div class="skeleton-shimmer market-stat-label"></div>
+
+                <div class="skeleton-shimmer market-stat-value"></div>
+              </div>
+            </div>
+
+            <div class="trend">
+              <div class="skeleton-shimmer market-trend-label"></div>
+
+              <div class="skeleton-shimmer market-trend-value"></div>
+            </div>
+
+            <div class="box">
+              <div class="skeleton-shimmer market-clause-label"></div>
+
+              <div class="skeleton-shimmer market-clause-value"></div>
+            </div>
+
+            <div class="skeleton-shimmer market-player-button"></div>
+          </div>
+        </article>
+      }
+    } @else {
+      @for (player of filteredPlayers(); track player.playerMaster.id) {
+        <app-player-card
+          [players]="player"
+          [config]="{
+            isOwnPlayer: false,
+            isMarketOpen: false,
+            hasShieldsAvailable: false,
+          }"
+          (onActionClick)="onPlayerCardAction($event)"
+          (onBid)="onPlayerBid($event)"
+          (onModifyBid)="onPlayerModifyBid($event)"
+          (onCancelBid)="onPlayerCancelBid($event)"
+        />
+      } @empty {
+        <div class="market-empty">
+          <h3>No hay jugadores en el mercado</h3>
+
+          <p>Ahora mismo no hay oportunidades disponibles.</p>
+        </div>
+      }
+    }
+  </div>
+</section>
+
+<!-- ============================================================
+     MODAL
+============================================================= -->
+
+@if (selectedPlayer(); as player) {
+  <app-player-modal
+    [isOpen]="isModalOpen()"
+    [player]="player"
+    [initialAction]="modalAction()"
+    (closed)="closeModal()"
+    (buyOffer)="onBuyOffer($event)"
+    (modifyBid)="onModifyBid($event)"
+    (cancelBid)="onCancelBid()"
+  />
+}

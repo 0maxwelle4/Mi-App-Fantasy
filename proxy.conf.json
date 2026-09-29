@@ -1,0 +1,33 @@
+{
+  "/auth-identity": {
+    "target": "https://laliga.es",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/auth-identity": ""
+    },
+    "logLevel": "debug"
+  },
+  "/api": {
+    "target": "https://fantasy-api.llt-services.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/fantasy": {
+    "target": "https://fantasy-api.llt-services.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/fantasy": ""
+    },
+    "logLevel": "debug"
+  },
+  "/analytics": {
+    "target": "https://www.futbolfantasy.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+
+}

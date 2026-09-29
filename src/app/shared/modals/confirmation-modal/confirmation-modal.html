@@ -1,0 +1,73 @@
+<div class="modal-overlay" [class.open]="isOpen" (click)="onOverlayClick($event)">
+  @if (isOpen) {
+    <div class="offer-modal warning-modal">
+      <!-- HEADER -->
+
+      <div class="offer-modal-head">
+        <button class="modal-close" type="button" (click)="close()">✕</button>
+
+        <span class="eyebrow">
+          {{ eyebrow }}
+        </span>
+
+        <h2>
+          {{ title }}
+        </h2>
+      </div>
+
+      <!-- BODY -->
+
+      <div class="offer-modal-body">
+        @if (player) {
+          <div class="offer-modal-player">
+            <div class="offer-modal-photo">
+              <img [src]="player.image" [alt]="player.name" />
+            </div>
+
+            <div>
+              @if (player.positionId !== undefined) {
+                <span class="pos-chip">
+                  {{ player.positionId }}
+                </span>
+              }
+
+              <h3>
+                {{ player.name }}
+              </h3>
+
+              @if (player.teamName) {
+                <p>
+                  {{ player.teamName }}
+                </p>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- WARNING -->
+
+        <div class="warning-box">
+          <p>
+            {{ description }}
+          </p>
+        </div>
+
+        <!-- ACTIONS -->
+
+        <div class="warning-actions">
+          <button class="action-item btn-confirm" type="button" (click)="confirm()">
+            <span>
+              {{ confirmText }}
+            </span>
+          </button>
+
+          <button class="action-item btn-cancel" type="button" (click)="close()">
+            <span>
+              {{ cancelText }}
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

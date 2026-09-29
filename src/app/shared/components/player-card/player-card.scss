@@ -1,0 +1,355 @@
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  height: -webkit-fill-available;
+  cursor: pointer;
+
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.card:hover {
+  border-color: #3a4053;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.photo {
+  height: 220px;
+  background: linear-gradient(180deg, #151923, #11131a);
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  position: relative;
+}
+.photo img {
+  height: 205px;
+  max-width: 90%;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.45));
+}
+
+/** MANAGER BADGE **/
+.manager-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  max-width: calc(100% - 20px);
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  background: rgba(12, 14, 19, 0.85);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  color: #d6d9df;
+  font: 600 10px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.manager-badge:hover {
+  background: rgba(20, 24, 33, 0.95);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.manager-badge svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  color: #9aa1b4;
+}
+
+.manager-badge span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/** NUM BIDS **/
+.bid-counter {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ff4b4b;
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  z-index: 10;
+
+  border: 2px solid #161616;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.bid-counter.has-my-bid {
+  background: #00e676;
+  color: #07100b;
+}
+
+.badges {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.badge {
+  padding: 5px 7px;
+  border-radius: 3px;
+  background: #292e39; // Fondo oscuro por defecto
+  color: #d6d9df;
+  font: 600 8px var(--mono);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+
+  // --- DISEÑO INSPIRADO EN LA APP LALIGA FANTASY ---
+  // Colores sólidos y texto en blanco para máxima visibilidad
+  &.por {
+    background: #e67e22; // Naranja Portero
+    color: #ffffff;
+  }
+
+  &.df {
+    background: #2ecc71; // Verde Defensa
+    color: #ffffff;
+  }
+
+  &.cc {
+    background: #3498db; // Azul Centrocampista
+    color: #ffffff;
+  }
+
+  &.dl {
+    background: #e74c3c; // Rojo Delantero
+    color: #ffffff;
+  }
+
+  &.ch {
+    background: #8e44ad; // Púrpura / Violeta para el Entrenador (Coach)
+    color: #ffffff;
+  }
+
+  // Mantenemos tus clases de estado intactas
+  &.green {
+    background: rgba(67, 197, 138, 0.1);
+    color: var(--green);
+  }
+
+  &.red {
+    background: var(--redsoft);
+    color: #ff6673;
+  }
+}
+
+.badge.shielded {
+  background: rgba(0, 242, 254, 0.12); /* Fondo cian translúcido muy fino */
+  color: #00f2fe; /* Texto e icono cian brillante */
+  border: 1px solid rgba(0, 242, 254, 0.2); /* Borde sutil para darle efecto de escudo */
+}
+
+.body {
+  padding: 13px;
+}
+.name {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+.name h3 {
+  margin: 0;
+  font-size: 17px;
+}
+.club {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.club img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  //background: var(--panel-3);
+  //border: 1px solid var(--line);
+  //border-radius: 50%;
+}
+.stats {
+  //display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+}
+.stats span {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  justify-self: self-end;
+}
+.stats strong {
+  font: 11px var(--mono);
+}
+.trend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font: 9px var(--mono);
+}
+
+.managerName {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font: 12px var(--mono);
+  span {
+    svg {
+      width: 18px;
+      margin-right: 10px;
+    }
+    display: flex;
+    align-items: center;
+  }
+}
+
+.positive {
+  color: var(--green);
+}
+.negative {
+  color: #ef6874;
+}
+.box {
+  margin-top: 10px;
+  padding: 11px;
+  background: var(--panel-3) !important;
+  border-radius: var(--radius);
+}
+.box span {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+}
+.box strong {
+  display: block;
+  margin-top: 3px;
+  font: 18px var(--display);
+  color: var(--yellow);
+}
+
+.countdown {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #0c0e13;
+  border: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.countdown span {
+  color: var(--muted);
+  font: 8px var(--mono);
+  text-transform: uppercase;
+}
+.countdown strong {
+  font: 600 11px var(--mono);
+  color: #ff6673;
+}
+
+.rows {
+  margin-top: 10px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 7px;
+  font-size: 10px;
+}
+.row span {
+  color: var(--muted);
+}
+.row strong {
+  font: 10px var(--mono);
+}
+.actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+.btn {
+  flex: 1;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 11px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn.red {
+  background: var(--red);
+}
+.btn.yellow {
+  background: var(--yellow);
+}
+.btn.green {
+  background: #27a844;
+}
+.btn.cyan {
+  background: #05c5d1;
+}
+.btn.blue {
+  background: var(--blue);
+  //background: #100dd5;
+}
+.btn.dark {
+  background: #292e39;
+}

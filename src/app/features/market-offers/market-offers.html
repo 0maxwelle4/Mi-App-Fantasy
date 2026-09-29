@@ -1,0 +1,425 @@
+<header class="top">
+  <div>
+    <div class="eyebrow">LIGA ROJA · OFERTAS · ACTUALIZADO AHORA</div>
+
+    <h1 class="title">OFERTAS</h1>
+  </div>
+
+  <div class="money">
+    <span>PRESUPUESTO</span>
+    <strong>{{ teamMoney() | number }}€</strong>
+  </div>
+</header>
+
+<!-- ============================================================
+     NAV
+============================================================= -->
+
+<nav class="nav">
+  <a class="nav-tab" [routerLink]="['/market', preSelectedLeagueId()]">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="8" cy="21" r="1" />
+      <circle cx="19" cy="21" r="1" />
+
+      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 2-1.58l1.65-7.42H5.12" />
+    </svg>
+
+    Mercado
+  </a>
+
+  <span class="nav-tab active">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path
+        d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"
+      />
+
+      <circle cx="7.5" cy="7.5" r="1" fill="currentColor" />
+    </svg>
+
+    Ofertas de la Liga
+
+    <span class="nav-count">
+      {{ totalOffersCount() }}
+    </span>
+  </span>
+</nav>
+
+<!-- ============================================================
+     SUMMARY
+============================================================= -->
+<!--
+<div class="summary">
+  <div class="metric">
+    <span>EN OFERTAS</span>
+    <strong>{{ leagueMarket().length }}</strong>
+  </div>
+
+  <div class="metric">
+    <span>PUJAS ACTIVAS</span>
+    <strong>{{ activeBidsCount() }}</strong>
+  </div>
+
+  <div class="metric">
+    <span>MI PRESUPUESTO</span>
+    <strong>{{ teamMoney() | number }}€</strong>
+  </div>
+
+  <div class="metric">
+    <span>RECOMPENSA DIARIA</span>
+    <strong>+250K€</strong>
+  </div>
+</div>
+-->
+<!-- ============================================================
+     NOTICE
+============================================================= -->
+
+<div class="notice">Mercado abierto · Revisa tus pujas antes del cierre.</div>
+
+<!-- ============================================================
+     OFFERS
+============================================================= -->
+
+<section class="section">
+  <div class="section-head">
+    <h2>OFERTAS DE LA LIGA</h2>
+
+    <span class="small">
+      @if (loadingMarket()) {
+        Cargando ofertas...
+      } @else {
+        Ofertas recibidas por tus jugadores
+      }
+    </span>
+  </div>
+
+  <div class="offer-list">
+    <!-- ========================================================
+         LOADING
+    ========================================================= -->
+
+    @if (loadingMarket()) {
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <article class="offer-card offer-skeleton">
+          <div class="offer-main">
+            <!-- PLAYER -->
+
+            <div class="offer-player">
+              <div class="offer-avatar">
+                <div
+                  class="skeleton-shimmer"
+                  style="
+                    width: 56px;
+                    height: 56px;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.04);
+                  "
+                ></div>
+              </div>
+
+              <div class="offer-player-info">
+                <div class="offer-name-row">
+                  <div
+                    class="skeleton-shimmer"
+                    style="
+                      width: 120px;
+                      height: 16px;
+                      border-radius: 4px;
+                      background: rgba(255, 255, 255, 0.05);
+                    "
+                  ></div>
+
+                  <div
+                    class="skeleton-shimmer"
+                    style="
+                      width: 22px;
+                      height: 18px;
+                      border-radius: 4px;
+                      background: rgba(255, 255, 255, 0.03);
+                    "
+                  ></div>
+                </div>
+
+                <div class="offer-club">
+                  <div
+                    class="skeleton-shimmer"
+                    style="
+                      width: 20px;
+                      height: 20px;
+                      border-radius: 50%;
+                      background: rgba(255, 255, 255, 0.04);
+                    "
+                  ></div>
+
+                  <div
+                    class="skeleton-shimmer"
+                    style="
+                      width: 80px;
+                      height: 12px;
+                      border-radius: 4px;
+                      background: rgba(255, 255, 255, 0.03);
+                    "
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VALUES -->
+
+            <div class="offer-values">
+              <div>
+                <div
+                  class="skeleton-shimmer"
+                  style="
+                    width: 45px;
+                    height: 9px;
+                    border-radius: 3px;
+                    margin-bottom: 7px;
+                    background: rgba(255, 255, 255, 0.025);
+                  "
+                ></div>
+
+                <div
+                  class="skeleton-shimmer"
+                  style="
+                    width: 100px;
+                    height: 15px;
+                    border-radius: 4px;
+                    background: rgba(255, 255, 255, 0.05);
+                  "
+                ></div>
+              </div>
+
+              <div>
+                <div
+                  class="skeleton-shimmer"
+                  style="
+                    width: 45px;
+                    height: 9px;
+                    border-radius: 3px;
+                    margin-bottom: 7px;
+                    background: rgba(255, 255, 255, 0.025);
+                  "
+                ></div>
+
+                <div
+                  class="skeleton-shimmer"
+                  style="
+                    width: 100px;
+                    height: 15px;
+                    border-radius: 4px;
+                    background: rgba(255, 255, 255, 0.05);
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTTOM -->
+
+          <div class="offer-bottom">
+            <div class="offer-amount">
+              <div
+                class="skeleton-shimmer"
+                style="
+                  width: 120px;
+                  height: 18px;
+                  border-radius: 4px;
+                  background: rgba(255, 255, 255, 0.05);
+                "
+              ></div>
+
+              <div
+                class="skeleton-shimmer"
+                style="
+                  width: 65px;
+                  height: 20px;
+                  border-radius: 10px;
+                  background: rgba(255, 255, 255, 0.04);
+                "
+              ></div>
+            </div>
+
+            <div class="offer-expiry">
+              <div
+                class="skeleton-shimmer"
+                style="
+                  width: 100px;
+                  height: 16px;
+                  border-radius: 4px;
+                  background: rgba(255, 255, 255, 0.04);
+                "
+              ></div>
+            </div>
+
+            <div class="offer-actions">
+              <div
+                class="skeleton-shimmer"
+                style="
+                  width: 38px;
+                  height: 38px;
+                  border-radius: 6px;
+                  background: rgba(255, 255, 255, 0.04);
+                "
+              ></div>
+
+              <div
+                class="skeleton-shimmer"
+                style="
+                  width: 38px;
+                  height: 38px;
+                  border-radius: 6px;
+                  background: rgba(255, 255, 255, 0.04);
+                "
+              ></div>
+            </div>
+          </div>
+        </article>
+      }
+    } @else {
+      @for (player of leagueMarket(); track player.id) {
+        @let team = getTeamByPlayer(player);
+
+        <article class="offer-card">
+          <div class="offer-main">
+            <!-- PLAYER -->
+
+            <div class="offer-player">
+              <div class="offer-avatar" (click)="openPlayerStats(player.playerMaster.id)">
+                <img
+                  [src]="player.playerMaster?.images?.transparent?.['256x256']"
+                  [alt]="player.playerMaster?.name"
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="offer-player-info">
+                <div class="offer-name-row">
+                  <h3 (click)="openPlayerStats(player.playerMaster.id)" style="cursor: pointer">
+                    {{ player.playerMaster?.nickname || player.playerMaster?.name }}
+                  </h3>
+
+                  <span class="offer-count">
+                    {{ player.currentOffer?.length ?? 0 }}
+                  </span>
+                </div>
+
+                <div class="offer-club">
+                  @if (team) {
+                    <img [src]="team.badgeColor" [alt]="team.name" loading="lazy" />
+
+                    <span>
+                      {{ team.name }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- VALUES -->
+
+            <div class="offer-values">
+              <div>
+                <span>VALOR</span>
+
+                <strong> {{ player.playerMaster?.marketValue | number }}€ </strong>
+              </div>
+
+              <div>
+                <span>VENTA</span>
+
+                <strong> {{ player.salePrice | number }}€ </strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- OFFER -->
+          @for (offer of player.currentOffer; track offer.id) {
+            <div class="offer-bottom">
+              <div class="offer-amount">
+                <strong> {{ offer.money | number }}€ </strong>
+
+                <span class="tag" [class.pending]="offer.status === 'pending'">
+                  {{ offer.status | uppercase }}
+                </span>
+              </div>
+
+              <div class="offer-expiry">
+                <span>EXPIRA:</span>
+
+                <strong>
+                  {{ offer.expirationDate | date: 'd/M' }}
+                </strong>
+              </div>
+
+              <div class="offer-actions">
+                <button
+                  class="offer-accept"
+                  aria-label="Aceptar oferta"
+                  (click)="onAcceptOfferClick(player)"
+                >
+                  ✓
+                </button>
+
+                <button
+                  class="offer-reject"
+                  aria-label="Rechazar oferta"
+                  (click)="onRejectOfferClick(player)"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          }
+        </article>
+      }
+
+      <!-- ======================================================
+           EMPTY
+      ======================================================= -->
+
+      @if (leagueMarket().length === 0) {
+        <div class="no-offers">No tienes ofertas activas recibidas en este momento.</div>
+      }
+    }
+  </div>
+</section>
+
+@if (confirmationOpen() && selectedPlayerForModal()) {
+  <app-confirmation-modal
+    [isOpen]="confirmationOpen()"
+    [title]="confirmationTitle()"
+    [description]="confirmationDescription()"
+    [player]="{
+      name: selectedPlayerForModal()?.playerMaster?.name || '',
+      positionId: selectedPlayerForModal()?.playerMaster?.positionId,
+      image: selectedPlayerForModal()?.playerMaster?.images?.transparent?.['256x256'],
+      teamName: selectedPlayerForModal()?.playerMaster?.team?.name,
+    }"
+    confirmText="Confirmar y Continuar"
+    cancelText="Cancelar y Volver"
+    (confirmed)="onConfirmationSuccess()"
+    (cancelled)="closeConfirmation()"
+  >
+  </app-confirmation-modal>
+}
+
+<app-player-stats-modal
+  [playerId]="selectedPlayerId"
+  [isOpen]="showPlayerStats"
+  (closeModal)="closePlayerStats()"
+/>

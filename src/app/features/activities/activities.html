@@ -1,0 +1,405 @@
+<!-- ============================================================
+     HEADER
+============================================================ -->
+
+<header class="top">
+  <div>
+    <div class="eyebrow">LIGA ROJA - ACTIVIDAD - A TIEMPO REAL</div>
+    <h1 class="title">ACTIVIDADES</h1>
+  </div>
+
+  @if (false) {
+    <div class="money">
+      <span>RESULTADOS</span>
+
+      @if (loading()) {
+        <strong>...</strong>
+      } @else {
+        <strong>{{ filteredActivities().length }}</strong>
+      }
+    </div>
+  }
+
+  <!-- BOTON REFRESCAR -->
+  <button
+    type="button"
+    class="refresh-btn"
+    [class.spinning]="loading() || activitiesLoading()"
+    [disabled]="loading() || activitiesLoading()"
+    (click)="refresh()"
+    aria-label="Refrescar movimientos"
+    title="Refrescar movimientos"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="23 4 23 10 17 10"></polyline>
+      <polyline points="1 20 1 14 7 14"></polyline>
+      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+    </svg>
+    <span>Refrescar</span>
+  </button>
+</header>
+
+<!-- ============================================================
+     TOOLBAR
+============================================================ -->
+
+<div class="toolbar">
+  <input
+    #searchInput
+    class="search"
+    type="text"
+    placeholder="Buscar jugador o manager..."
+    [value]="search()"
+    (input)="setSearch(searchInput.value)"
+  />
+
+  <select #sortSelect class="sort" [value]="sort()" (change)="setSort(sortSelect.value)">
+    <option value="recent">Mas recientes</option>
+    <option value="old">Mas antiguos</option>
+    <option value="high">Mayor importe</option>
+    <option value="low">Menor importe</option>
+  </select>
+</div>
+
+<!-- ============================================================
+     ADVANCED FILTERS
+============================================================ -->
+
+<div class="advanced-filters">
+  <select
+    #userSelect
+    class="advanced-filter"
+    [value]="userFilter()"
+    (change)="setUserFilter(userSelect.value)"
+  >
+    <option value="all">TODOS LOS MANAGERS</option>
+
+    @for (manager of managers(); track manager.id) {
+      <option [value]="String(manager.id)">
+        {{ manager.managerName }}
+      </option>
+    }
+  </select>
+
+  <select
+    #typeSelect
+    class="advanced-filter"
+    [value]="typeFilter()"
+    (change)="setTypeFilter(typeSelect.value)"
+  >
+    <option value="all">TODAS LAS ACTIVIDADES</option>
+    <option value="market">Fichajes de mercado</option>
+    <option value="transfer">Traspasos</option>
+    <option value="sale">Ventas a la liga</option>
+    <option value="ideal">Once Ideal</option>
+    <option value="bonus">Premios de jornada</option>
+    <option value="manager">Nuevos managers</option>
+    <option value="shield">Jugadores blindados</option>
+    <option value="other">Otras actividades</option>
+  </select>
+
+  <select
+    #timeSelect
+    class="advanced-filter"
+    [value]="timeFilter()"
+    (change)="setTimeFilter(timeSelect.value)"
+  >
+    <option value="all">TODO EL TIEMPO</option>
+    <option value="today">Hoy</option>
+    <option value="24h">Ultimas 24 horas</option>
+    <option value="7d">Ultimos 7 dias</option>
+    <option value="30d">Ultimos 30 dias</option>
+  </select>
+</div>
+
+<!-- ============================================================
+     ACTIVITIES
+============================================================ -->
+
+<section class="section">
+  <div class="section-head">
+    <h2>MOVIMIENTOS</h2>
+
+    @if (!loading()) {
+      <span class="small">{{ filteredActivities().length }} resultados</span>
+    }
+  </div>
+
+  <div class="feed">
+    @if (loading()) {
+      @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+        <article class="move activity-skeleton">
+          <div class="move-avatar">
+            <div class="skeleton skeleton-avatar"></div>
+          </div>
+
+          <div class="move-main">
+            <div class="move-top">
+              <div class="skeleton skeleton-player-name"></div>
+              <div class="skeleton skeleton-tag"></div>
+              <div class="skeleton skeleton-team-tag"></div>
+            </div>
+
+            <div class="move-desc">
+              <div class="skeleton skeleton-line long"></div>
+              <div class="skeleton skeleton-line medium"></div>
+            </div>
+          </div>
+
+          <div class="move-right">
+            <div class="skeleton skeleton-amount"></div>
+            <div class="skeleton skeleton-date"></div>
+          </div>
+        </article>
+      }
+    } @else {
+      @for (activity of visibleActivities(); track activity.id) {
+        @let player = getPlayer(activity.playerMasterId);
+        @let manager1 = getManager(activity.user1Id);
+        @let manager2 = activity.user2Id !== undefined ? getManager(activity.user2Id) : undefined;
+        @let team = player ? getTeam(player.teamId) : undefined;
+
+        <article class="move" [class.has-player]="!!player">
+          @if (player) {
+            <div class="move-avatar player-avatar">
+              <a
+                class="player-link"
+                href="#"
+                (click)="$event.preventDefault(); openPlayerStats(player.id)"
+              >
+                <img class="face" [src]="player.image" [alt]="player.nickname" loading="lazy" />
+              </a>
+
+              @if (team) {
+                <img class="crest" [src]="team.badgeColor" [alt]="team.name" loading="lazy" />
+              }
+            </div>
+          } @else {
+            <div class="move-avatar system">
+              @switch (activity.activityTypeId) {
+                @case (12) {
+                  <span class="system-icon">*</span>
+                }
+                @case (6) {
+                  <span class="system-icon">E</span>
+                }
+                @case (9) {
+                  <span class="system-icon">+</span>
+                }
+                @case (4) {
+                  <span class="system-icon">S</span>
+                }
+                @default {
+                  <span class="system-icon">A</span>
+                }
+              }
+            </div>
+          }
+
+          <div class="move-main">
+            <div class="move-top">
+              @if (player) {
+                <a
+                  class="player-name"
+                  href="#"
+                  (click)="$event.preventDefault(); openPlayerStats(player.id)"
+                >
+                  {{ player.nickname }}
+                </a>
+              } @else {
+                <h4>
+                  @switch (activity.activityTypeId) {
+                    @case (12) {
+                      Once Ideal
+                    }
+                    @case (6) {
+                      Premio de jornada
+                    }
+                    @case (9) {
+                      Nuevo manager
+                    }
+                    @default {
+                      Actividad
+                    }
+                  }
+                </h4>
+              }
+
+              <span
+                class="tag"
+                [class.red]="getActivityClass(activity.activityTypeId) === 'red'"
+                [class.blue]="getActivityClass(activity.activityTypeId) === 'blue'"
+                [class.yellow]="getActivityClass(activity.activityTypeId) === 'yellow'"
+                [class.green]="getActivityClass(activity.activityTypeId) === 'green'"
+                [class.purple]="getActivityClass(activity.activityTypeId) === 'purple'"
+                [class.cyan]="getActivityClass(activity.activityTypeId) === 'cyan'"
+              >
+                {{ getActivityLabel(activity.activityTypeId) }}
+              </span>
+            </div>
+
+            <div class="move-desc">
+              @if (activity.activityTypeId === 31) {
+                @if (manager1) {
+                  <a class="manager-link" [routerLink]="['/squad', manager1.teamId]">{{
+                    manager1.managerName
+                  }}</a>
+                }
+                ficho a
+                @if (player) {
+                  <a
+                    class="player-inline"
+                    href="#"
+                    (click)="$event.preventDefault(); openPlayerStats(player.id)"
+                    >{{ player.nickname }}</a
+                  >
+                }
+                en el mercado.
+              } @else if (activity.activityTypeId === 1) {
+                @if (manager1) {
+                  <a class="manager-link" [routerLink]="['/squad', manager1.teamId]">{{
+                    manager1.managerName
+                  }}</a>
+                }
+                adquirio a
+                @if (player) {
+                  <a class="player-inline" href="#" (click)="$event.preventDefault()">{{
+                    player.nickname
+                  }}</a>
+                }
+                @if (manager2) {
+                  de
+                  <a class="manager-link" [routerLink]="['/squad', manager2.teamId]">{{
+                    manager2.managerName
+                  }}</a>
+                }
+                .
+              } @else if (activity.activityTypeId === 33) {
+                @if (manager1) {
+                  <a class="manager-link" [routerLink]="['/squad', manager1.teamId]">{{
+                    manager1.managerName
+                  }}</a>
+                }
+                vendio
+                @if (player) {
+                  <a class="player-inline" href="#" (click)="$event.preventDefault()">{{
+                    player.nickname
+                  }}</a>
+                }
+                a la liga.
+              } @else if (activity.activityTypeId === 12) {
+                @if (manager1) {
+                  <a class="manager-link" [routerLink]="['/squad', manager1.teamId]">{{
+                    manager1.managerName
+                  }}</a>
+                }
+                recibio <b>100.000 euros</b> por jugador incluido en el Once Ideal.
+              } @else if (activity.activityTypeId === 6) {
+                @if (manager1) {
+                  <a class="manager-link" [routerLink]="['/squad', manager1.teamId]">{{
+                    manager1.managerName
+                  }}</a>
+                }
+                recibio el premio economico de la jornada.
+              } @else if (activity.activityTypeId === 9) {
+                @if (manager1) {
+                  <a class="manager-link" [routerLink]="['/squad', manager1.teamId]">{{
+                    manager1.managerName
+                  }}</a>
+                }
+                se ha unido a la liga.
+              } @else if (activity.activityTypeId === 4) {
+                @if (manager1) {
+                  <a class="manager-link" [routerLink]="['/squad', manager1.teamId]">{{
+                    manager1.managerName
+                  }}</a>
+                }
+                ha <b>blindado</b> a
+                @if (player) {
+                  <a class="player-inline" href="#" (click)="$event.preventDefault()">{{
+                    player.nickname
+                  }}</a>
+                }
+                .
+              } @else {
+                Actividad registrada en la liga.
+              }
+            </div>
+          </div>
+
+          <div class="move-right">
+            @if (activity.amount !== undefined) {
+              <div
+                class="move-amount"
+                [class.positive]="isPositiveActivity(activity)"
+                [class.negative]="isNegativeActivity(activity)"
+              >
+                @if (isPositiveActivity(activity)) {
+                  +
+                }
+                @if (isNegativeActivity(activity)) {
+                  -
+                }
+                {{ formatMoney(activity.amount) }}
+              </div>
+            }
+
+            <div class="move-date">{{ formatDate(activity.createdAt) }}</div>
+          </div>
+        </article>
+      }
+    }
+  </div>
+
+  @if (!loading() && !loadingMore() && filteredActivities().length === 0) {
+    <div class="empty">No hay actividades que coincidan con los filtros seleccionados.</div>
+  }
+
+  @if (!loading() && hasMoreVisible()) {
+    <button class="load-more" type="button" [disabled]="loadingMore()" (click)="loadMore()">
+      @if (loadingMore()) {
+        CARGANDO...
+      } @else {
+        CARGAR MAS MOVIMIENTOS
+      }
+    </button>
+  }
+</section>
+
+<!-- ============================================================
+     BOTON FLOTANTE: VOLVER ARRIBA
+============================================================ -->
+
+<button
+  type="button"
+  class="scroll-top-btn"
+  style="border: 1px solid red"
+  [class.visible]="showScrollTop()"
+  (click)="scrollToTop()"
+  aria-label="Volver arriba"
+  title="Volver arriba"
+>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<app-player-stats-modal
+  [playerId]="selectedPlayerId"
+  [isOpen]="showPlayerStats"
+  (closeModal)="closePlayerStats()"
+/>

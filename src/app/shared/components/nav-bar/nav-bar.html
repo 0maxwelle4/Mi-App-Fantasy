@@ -1,0 +1,181 @@
+<!-- Barra superior (solo móvil) -->
+<header class="mobile-topbar">
+  <a class="brand" href="#inicio" aria-label="Liga Roja">
+    <span class="brand-mark">MF</span>
+    <strong>{{ preSelectedLeagueName() }}</strong>
+  </a>
+  <button
+    type="button"
+    class="menu-toggle"
+    [class.is-open]="menuOpen()"
+    [class.is-open]="menuOpen()"
+    (click)="toggleMenu()"
+    [attr.aria-expanded]="menuOpen()"
+    aria-label="Abrir menú"
+  >
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- Fondo oscuro detrás del drawer (solo móvil, cuando está abierto) -->
+<div class="drawer-overlay" [class.open]="menuOpen()" (click)="closeMenu()"></div>
+
+<!-- Columna vertical (desktop) / barra horizontal (tablet) / drawer lateral (móvil) -->
+<aside class="sidebar" [class.open]="menuOpen()">
+  <button type="button" class="drawer-close" (click)="closeMenu()" aria-label="Cerrar menú">
+    ✕
+  </button>
+
+  <a class="brand desktop-brand" href="#inicio" aria-label="Liga Roja">
+    <span class="brand-mark">MF</span>
+    <span>
+      <strong>{{ preSelectedLeagueName() }}</strong>
+    </span>
+  </a>
+
+  <button
+    type="button"
+    class="update-trends-btn profile-mini"
+    [class.is-loading]="dataLoading()"
+    [disabled]="dataLoading()"
+    (click)="actualizarTendencias()"
+  >
+    <span class="icon-wrap" [class.spin]="dataLoading()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+        <path d="M21 3v6h-6" />
+      </svg>
+    </span>
+    <span>{{ dataLoading() ? 'Actualizando…' : 'Actualizar tendencias' }}</span>
+  </button>
+
+  <nav class="main-nav" aria-label="Navegación principal">
+    <a
+      class="nav-link"
+      (click)="closeMenu()"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['home']"
+    >
+      <span>⌂</span> Inicio
+    </a>
+    <a
+      class="nav-link"
+      (click)="closeMenu()"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['ranking', preSelectedLeagueId()]"
+    >
+      <span>▥</span> Clasificación
+    </a>
+    <a
+      class="nav-link"
+      (click)="closeMenu()"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['fixtures']"
+    >
+      <span>▤</span> Calendario
+    </a>
+    <a
+      class="nav-link"
+      (click)="closeMenu()"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['squad', preSelectedManagerId()]"
+    >
+      <span>◈</span> Mi equipo
+    </a>
+    <a
+      class="nav-link"
+      (click)="closeMenu()"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['Buyout-Clauses', preSelectedLeagueId()]"
+    >
+      <span>🛡</span> Clausulas
+    </a>
+    <a
+      class="nav-link"
+      (click)="closeMenu()"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: false }"
+      [routerLink]="['market', preSelectedLeagueId()]"
+    >
+      <span>♢</span> Mercado
+    </a>
+    <a
+      class="nav-link"
+      (click)="closeMenu()"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['activities', preSelectedLeagueId()]"
+    >
+      <span class="icon-wrap">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+        </svg>
+      </span>
+      Actividades
+    </a>
+
+    @if (false) {
+      <a class="nav-link" (click)="closeMenu()" href="#pujas"> <span>↗</span> Mis pujas </a>
+      <a class="nav-link" (click)="closeMenu()" href="#liga-global"> <span>◎</span> Liga completa </a>
+      <a class="nav-link" (click)="closeMenu()" href="#analisis"> <span>⌁</span> Análisis </a>
+    }
+
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="sync-box">
+      <span class="live-dot"></span>
+      <div>
+        <strong>Datos sincronizados</strong>
+        <small>{{ syncLabel() }}</small>
+      </div>
+    </div>
+    <button type="button" class="settings logout-btn" (click)="cerrarSesion()">
+      ⎋ Cerrar sesión
+    </button>
+  </div>
+
+</aside>
+
+<!-- Tab bar inferior (solo móvil) -->
+<nav class="mobile-tabbar" aria-label="Navegación rápida">
+  <a routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['home']">
+    <span>⌂</span><small>Inicio</small>
+  </a>
+  <a
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    [routerLink]="['ranking', preSelectedLeagueId()]"
+  >
+    <span>▥</span><small>Ranking</small>
+  </a>
+  <a
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: false }"
+    [routerLink]="['market', preSelectedLeagueId()]"
+  >
+    <span>♢</span><small>Mercado</small>
+  </a>
+  <a
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    [routerLink]="['squad', preSelectedManagerId()]"
+  >
+    <span>◈</span><small>Equipo</small>
+  </a>
+  <button type="button" (click)="toggleMenu()" [class.active]="menuOpen()">
+    <span>☰</span><small>Más</small>
+  </button>
+</nav>

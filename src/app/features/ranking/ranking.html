@@ -1,0 +1,197 @@
+<!-- CLASSIFICATION -->
+<section id="clasificacion" class="page-section dark-section">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">{{ preSelectedLeagueName() }}</span>
+      <h2>CLASIFICACIÓN</h2>
+    </div>
+
+    <div class="top-actions">
+      <div class="segmented">
+        <button class="selected">GENERAL</button>
+        <button>JORNADA</button>
+        <button>VALOR</button>
+      </div>
+
+      <!-- BOTÓN REFRESCAR -->
+      <button
+        type="button"
+        class="refresh-btn"
+        [class.spinning]="loading() || budgetsLoading()"
+        [disabled]="loading() || budgetsLoading()"
+        (click)="refresh()"
+        aria-label="Refrescar clasificación"
+        title="Refrescar clasificación"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="23 4 23 10 17 10" />
+          <polyline points="1 20 1 14 7 14" />
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+        </svg>
+        <span>Refrescar</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data-table standings">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>MANAGER</th>
+          <th>PTS Jornada</th>
+          <th>PUNTOS</th>
+          <th>VALOR PLANTILLA</th>
+          <th>PRESUPUESTO EST.</th>
+          <th>EVOLUCIÓN</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          @for (i of skeletonRows; track i) {
+            <tr class="standing-skeleton-row">
+              <td><div class="skeleton-shimmer skeleton-rank"></div></td>
+
+              <td>
+                <div class="skeleton-manager">
+                  <div class="skeleton-shimmer skeleton-manager-name"></div>
+                  <div class="skeleton-shimmer skeleton-manager-subtitle"></div>
+                </div>
+              </td>
+
+              <td><div class="skeleton-shimmer skeleton-points"></div></td>
+              <td><div class="skeleton-shimmer skeleton-points"></div></td>
+              <td><div class="skeleton-shimmer skeleton-value"></div></td>
+              <td><div class="skeleton-shimmer skeleton-value"></div></td>
+              <td><div class="skeleton-shimmer skeleton-trend"></div></td>
+            </tr>
+          }
+        } @else {
+          @for (position of leagueStanding(); track position.team.id) {
+            <tr
+              [class.current]="position.team.teamMoney !== null"
+              (click)="goToTeamSquad(position.team.id)"
+            >
+              <!-- POSITION -->
+              <td>
+                <span class="rank">{{ position.position }}</span>
+              </td>
+
+              <!-- MANAGER -->
+              <td>
+                <strong>{{ position.team.manager.managerName }}</strong>
+              </td>
+
+              <!-- LIVE POINTS -->
+              @if (position.livePoints) {
+                <td class="mono">{{ position.livePoints }}</td>
+              } @else {
+                <td class="mono">▬</td>
+              }
+
+              <!-- TOTAL POINTS -->
+              <td class="mono bold">{{ position.points }}</td>
+
+              <!-- TEAM VALUE -->
+              <td class="mono">{{ position.team.teamValue | number }}</td>
+
+              <!-- ESTIMATED BUDGET -->
+              @if (budgetsLoading()) {
+                <td class="mono">
+                  <div class="skeleton-shimmer skeleton-value budget-skeleton"></div>
+                </td>
+              } @else if (budgets().get('' + position.team.id); as estimate) {
+                <td class="mono" [title]="getBudgetTooltip(estimate)">
+                  {{ estimate.isExact ? '' : '~' }}{{ estimate.budget | number: '1.0-0' }}
+                  @if (estimate.clauseSpent > 0) {
+                    <small class="budget-note">
+                      cláusulas −{{ estimate.clauseSpent | number: '1.0-0' }}
+                    </small>
+                  }
+                </td>
+              } @else {
+                <td class="mono">▬</td>
+              }
+
+              <!-- EVOLUTION -->
+              @if (position.position > position.previousPosition) {
+                <td>
+                  <span class="trend up">
+                    ▼ - {{ position.position - position.previousPosition }}
+                  </span>
+                </td>
+              } @else if (position.position < position.previousPosition) {
+                <td>
+                  <span class="trend down">
+                    ▲ + {{ position.previousPosition - position.position }}
+                  </span>
+                </td>
+              } @else {
+                <td>
+                  <span class="trend flat"> ▬ 0 </span>
+                </td>
+              }
+            </tr>
+          }
+
+          @if (leagueStanding().length === 0) {
+            <tr>
+              <td colspan="7" class="empty-standing">No hay datos de clasificación.</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CÓMO SE CALCULA EL PRESUPUESTO -->
+  <details class="calc-info">
+    <summary>¿Cómo se calcula el presupuesto estimado?</summary>
+
+    <div class="calc-body">
+      <p class="calc-formula">
+        Presupuesto = 100M + ventas + premios − fichajes − compras a managers − cláusulas subidas
+      </p>
+
+      <ul>
+        <li>
+          <strong>Punto de partida:</strong> todos los managers empiezan con
+          <strong>100.000.000€</strong>.
+        </li>
+        <li>
+          <strong>Suma:</strong> ventas a la liga, ventas a otros managers (traspasos y clausulazos
+          donde el manager es el vendedor), premios de jornada y once ideal.
+        </li>
+        <li>
+          <strong>Resta:</strong> fichajes de mercado y compras a otros managers (traspasos y
+          clausulazos donde el manager es el comprador).
+        </li>
+        <li>
+          <strong>Cláusulas subidas:</strong> si un manager paga X para subir la cláusula, esta sube
+          X × 2. Para saber si una cláusula alta es una subida manual o solo una subida natural del
+          jugador, comparamos la cláusula actual con el <strong>valor máximo</strong>
+          que ha alcanzado ese jugador en el mercado desde que el manager lo fichó. Si la cláusula
+          supera ese máximo, la diferencia solo puede venir de un pago manual, y calculamos
+          <code>(cláusula − máximo histórico) ÷ 2</code>.
+        </li>
+        <li>
+          <strong>Tu equipo</strong> muestra el dinero real (sin «~»). En el resto, pasa el ratón
+          por encima del importe para ver el desglose.
+        </li>
+      </ul>
+
+      <p class="calc-warning">
+        Es una estimación aproximada: no ve las cláusulas subidas en jugadores que ya se vendieron,
+        ni el coste de los blindajes, y el histórico de valor de mercado es diario, así que una
+        subida y bajada dentro del mismo día no se detecta con precisión total.
+      </p>
+    </div>
+  </details>
+</section>

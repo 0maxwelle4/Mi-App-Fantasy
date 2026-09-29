@@ -1,0 +1,1712 @@
+/* =========================================================
+   HEADER
+========================================================= */
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  color: var(--red);
+  font: 600 9px var(--mono);
+  letter-spacing: 0.1em;
+}
+
+.title {
+  margin: 4px 0 0;
+  font: 46px var(--display);
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.top-right {
+  display: flex;
+  gap: 10px;
+}
+
+.top-stat {
+  min-width: 125px;
+  border-left: 1px solid var(--line);
+  padding-left: 18px;
+}
+
+.top-stat span {
+  display: block;
+  color: var(--muted);
+  font: 600 8px var(--mono);
+  letter-spacing: 0.05em;
+}
+
+.top-stat strong {
+  display: block;
+  margin-top: 4px;
+  font: 28px var(--display);
+}
+
+/* =========================================================
+NAV
+========================================================= */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid var(--line);
+}
+/* =========================================================
+ NAV TAB
+ ========================================================= */
+.nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 14px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  text-decoration: none;
+  color: var(--muted);
+  font: 600 13px var(--body);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+/* =========================================================
+ ICON
+ ========================================================= */
+.nav-tab svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+/* =========================================================
+ACTIVE
+========================================================= */
+.nav-tab.active {
+  color: #fff;
+  border-bottom-color: var(--red);
+}
+.nav-tab.active svg {
+  color: var(--red);
+}
+/* =========================================================
+HOVER
+========================================================= */
+.nav-tab:not(.active):hover {
+  color: #cfd3da;
+}
+/* =========================================================
+ MOBILE
+ ========================================================= */
+@media (max-width: 600px) {
+  .nav {
+    gap: 22px;
+    margin-bottom: 20px;
+  }
+  .nav-tab {
+    gap: 7px;
+    padding-bottom: 11px;
+    font-size: 12px;
+  }
+  .nav-tab svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* =========================================================
+   MATCHDAY BAR
+========================================================= */
+
+.matchday-bar {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 1px;
+
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+
+  overflow: hidden;
+
+  margin-bottom: 20px;
+}
+
+.matchday-box {
+  background: var(--panel);
+  padding: 12px 16px;
+}
+
+.matchday-box span {
+  display: block;
+
+  color: var(--muted);
+
+  font: 700 8px var(--mono);
+
+  letter-spacing: 0.05em;
+}
+
+.matchday-box strong {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 5px;
+
+  font: 20px var(--display);
+}
+
+.live-pill {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 3px 8px;
+
+  border-radius: 20px;
+
+  background: var(--red-soft);
+  color: var(--red);
+
+  font: 800 9px var(--mono);
+}
+
+.live-pill::before {
+  content: '';
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: var(--red);
+
+  animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* =========================================================
+   JORNADAS
+========================================================= */
+
+.jornada-bar {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 20px;
+
+  overflow-x: auto;
+
+  padding-bottom: 2px;
+
+  scrollbar-width: thin;
+}
+
+.jornada-tab {
+  flex: 0 0 auto;
+
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 2px;
+
+  border: 1px solid var(--line2);
+
+  background: var(--panel2);
+
+  border-radius: 50%;
+
+  color: var(--muted);
+
+  transition: 0.15s ease;
+}
+
+.jornada-tab strong {
+  font: 16px var(--display);
+  color: #fff;
+}
+
+.jornada-tab span {
+  font: 700 8px var(--mono);
+  color: var(--muted);
+}
+
+.jornada-tab:hover {
+  border-color: #555c6a;
+}
+
+.jornada-tab.active {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.jornada-tab.active strong,
+.jornada-tab.active span {
+  color: #052015;
+}
+
+.jornada-tab.live:not(.active) {
+  border-color: var(--red);
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main-grid {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 360px;
+
+  gap: 16px;
+
+  align-items: start;
+
+  min-width: 0;
+}
+
+.card {
+  background: var(--panel);
+
+  border: 1px solid var(--line);
+
+  border-radius: 6px;
+}
+
+/* =========================================================
+   PITCH CARD
+========================================================= */
+
+.pitch-card {
+  padding: 15px;
+
+  min-width: 0;
+}
+
+.pitch-toolbar {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 15px;
+
+  margin-bottom: 13px;
+}
+
+.team-heading {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+.team-heading-logo {
+  width: 43px;
+  height: 43px;
+
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  background: #181c24;
+
+  border: 1px solid var(--line2);
+
+  border-radius: 6px;
+
+  overflow: hidden;
+}
+
+.team-heading-logo span {
+  font: 700 9px var(--mono);
+  color: #fff;
+}
+
+.team-heading h2 {
+  margin: 0;
+
+  font: 22px var(--display);
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.team-heading p {
+  margin: 3px 0 0;
+
+  color: var(--muted);
+
+  font-size: 10px;
+}
+
+/* =========================================================
+   FIELD
+========================================================= */
+
+.pitch {
+  position: relative;
+
+  width: 100%;
+
+  height: 780px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.16);
+
+  border-radius: 5px;
+
+  background:
+    linear-gradient(90deg, transparent 49.85%, rgba(255, 255, 255, 0.25) 50%, transparent 50.15%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.025) 0 55px,
+      rgba(0, 0, 0, 0.025) 55px 110px
+    ),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 55px, transparent 55px 110px),
+    #123d2b;
+}
+
+.pitch::before {
+  content: '';
+
+  position: absolute;
+
+  inset: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  border-radius: 2px;
+
+  pointer-events: none;
+}
+
+.pitch-center-line {
+  position: absolute;
+
+  top: 50%;
+
+  left: 4%;
+  right: 4%;
+
+  height: 1px;
+
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.center-circle {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 145px;
+  height: 145px;
+
+  transform: translate(-50%, -50%);
+
+  border: 1px solid rgba(255, 255, 255, 0.28);
+
+  border-radius: 50%;
+}
+
+.center-dot {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 5px;
+  height: 5px;
+
+  transform: translate(-50%, -50%);
+
+  background: rgba(255, 255, 255, 0.5);
+
+  border-radius: 50%;
+}
+
+.penalty {
+  position: absolute;
+
+  left: 50%;
+
+  width: 38%;
+  height: 16%;
+
+  transform: translateX(-50%);
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.penalty.top {
+  top: 0;
+  border-top: 0;
+}
+
+.penalty.bottom {
+  bottom: 0;
+  border-bottom: 0;
+}
+
+.goal {
+  position: absolute;
+
+  left: 50%;
+
+  width: 13%;
+  height: 5%;
+
+  transform: translateX(-50%);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.goal.top {
+  top: 0;
+  border-top: 0;
+}
+
+.goal.bottom {
+  bottom: 0;
+  border-bottom: 0;
+}
+
+/* =========================================================
+   FORMATION
+   DISTRIBUCIÓN VERTICAL EQUILIBRADA
+========================================================= */
+
+/*
+ * IMPORTANTE:
+ *
+ * Todas las filas utilizan el mismo sistema.
+ *
+ * No hay gaps verticales exagerados.
+ *
+ * El espacio se reparte de forma visual:
+ *
+ *       PORTERO
+ *
+ *      DEFENSAS
+ *
+ *      MEDIOS
+ *
+ *      DELANTEROS
+ *
+ * Además, las posiciones se ajustan según
+ * el tamaño de la pantalla.
+ */
+
+.formation-row {
+  position: absolute;
+
+  left: 2%;
+  right: 2%;
+
+  display: flex;
+
+  flex-wrap: nowrap;
+
+  justify-content: center;
+
+  align-items: flex-start;
+
+  /*
+   * GAP HORIZONTAL MUY CONTROLADO.
+   *
+   * Nunca habrá una separación exagerada
+   * entre jugadores.
+   */
+  gap: clamp(0px, 0.8vw, 10px);
+
+  min-width: 0;
+
+  z-index: 3;
+
+  overflow: visible;
+}
+
+/* =========================================================
+   POSICIONES
+========================================================= */
+
+/*
+ * DELANTEROS
+ *
+ * Antes: 8%
+ * Ahora ligeramente más abajo para que la
+ * separación con los medios sea menor.
+ */
+
+.row-striker {
+  top: 10%;
+}
+
+/*
+ * MEDIOS
+ *
+ * Se acerca bastante a delanteros y defensas.
+ */
+
+.row-midfield {
+  top: 31%;
+}
+
+/*
+ * DEFENSAS
+ *
+ * Ya no quedan tan abajo.
+ *
+ * Esto reduce mucho el hueco entre
+ * medios y defensas.
+ */
+
+.row-defence {
+  bottom: 28%;
+}
+
+/*
+ * PORTERO
+ *
+ * Se mantiene cerca de la línea inferior,
+ * pero con suficiente espacio visual.
+ */
+
+.row-goalkeeper {
+  bottom: 7%;
+}
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+.pitch-player {
+  position: relative;
+
+  /*
+   * ESTE ES EL PUNTO CLAVE.
+   *
+   * Cada jugador recibe exactamente una parte
+   * del ancho disponible.
+   */
+  flex: 1 1 0;
+
+  /*
+   * Evita que el contenido determine el ancho.
+   */
+  width: 0;
+
+  min-width: 0;
+
+  /*
+   * NO max-width.
+   *
+   * Esto permite que los 6 jugadores
+   * entren incluso en móvil pequeño.
+   */
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #fff;
+
+  padding: 0;
+
+  margin: 0;
+
+  box-sizing: border-box;
+
+  transition:
+    transform 0.16s ease,
+    filter 0.16s ease;
+
+  overflow: visible;
+}
+
+.pitch-player:hover {
+  transform: translateY(-5px);
+  cursor: pointer;
+  z-index: 10;
+}
+
+.pitch-player:hover .player-card-visual {
+  border-color: #778091;
+
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    0 0 0 2px rgba(225, 29, 46, 0.12);
+}
+
+/* =========================================================
+   PLAYER CARD VISUAL
+========================================================= */
+
+.player-card-visual {
+  position: relative;
+
+  /*
+   * La card nunca supera 88px,
+   * pero sí se reduce cuando no hay espacio.
+   */
+  width: min(88px, 100%);
+
+  aspect-ratio: 1 / 1;
+
+  height: auto;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: center;
+
+  overflow: visible;
+
+  background: linear-gradient(180deg, #202631, #11151b);
+
+  border: 2px solid #464d5b;
+
+  border-radius: clamp(4px, 0.7vw, 9px);
+
+  transition: 0.16s ease;
+
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.35);
+
+  box-sizing: border-box;
+}
+
+.player-card-visual::after {
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: clamp(3px, 0.6vw, 7px);
+
+  background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.28));
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   PLAYER IMAGE
+========================================================= */
+
+.player-image {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  max-width: 100%;
+
+  object-fit: contain;
+
+  z-index: 2;
+
+  filter: drop-shadow(0 7px 8px rgba(0, 0, 0, 0.45));
+}
+
+/* =========================================================
+   POSITION BADGE
+========================================================= */
+
+.position-badge {
+  position: absolute;
+
+  top: clamp(-8px, -0.6vw, -4px);
+
+  left: clamp(-8px, -0.6vw, -4px);
+
+  min-width: clamp(15px, 2vw, 25px);
+
+  height: clamp(15px, 2vw, 25px);
+
+  display: grid;
+
+  place-items: center;
+
+  padding: 0 clamp(2px, 0.4vw, 5px);
+
+  background: #0b0d12;
+
+  border: 1px solid #4a5160;
+
+  border-radius: clamp(3px, 0.4vw, 5px);
+
+  color: #d8dbe2;
+
+  font: 700 clamp(5px, 0.65vw, 8px) var(--mono);
+
+  z-index: 5;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   POINT BADGE
+========================================================= */
+
+.corner-badge {
+  position: absolute;
+
+  top: clamp(-6px, -0.5vw, -3px);
+
+  left: clamp(-6px, -0.5vw, -3px);
+
+  min-width: clamp(15px, 1.9vw, 24px);
+
+  height: clamp(15px, 1.8vw, 22px);
+
+  display: grid;
+
+  place-items: center;
+
+  padding: 0 clamp(2px, 0.4vw, 5px);
+
+  border-radius: clamp(3px, 0.4vw, 5px) clamp(3px, 0.4vw, 5px) clamp(3px, 0.4vw, 5px) 2px;
+
+  color: #fff;
+
+  font: 800 clamp(6px, 0.75vw, 10px) var(--mono);
+
+  z-index: 7;
+
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+
+  box-sizing: border-box;
+}
+
+.corner-badge.pos {
+  background: var(--green);
+  color: #06301f;
+}
+
+.corner-badge.neg {
+  background: var(--red);
+}
+
+.corner-badge.zero {
+  background: #5a6273;
+}
+
+.corner-badge.pending {
+  background: var(--yellow);
+  color: #3a2c05;
+}
+
+/* =========================================================
+   CREST
+========================================================= */
+
+.club-crest {
+  position: absolute;
+
+  right: clamp(-11px, -0.8vw, -5px);
+
+  bottom: clamp(-9px, -0.7vw, -4px);
+
+  width: clamp(18px, 2.2vw, 32px);
+
+  height: clamp(18px, 2.2vw, 32px);
+
+  display: grid;
+
+  place-items: center;
+
+  //background: #f4f4f5;
+
+  //border: clamp(1px, 0.15vw, 2px) solid #171a20;
+
+  //border-radius: 50%;
+
+  z-index: 6;
+
+  //overflow: hidden;
+
+  //box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+
+  box-sizing: border-box;
+
+  img {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+  }
+}
+
+.club-fallback {
+  color: #111;
+
+  font: 800 clamp(4px, 0.55vw, 7px) var(--mono);
+}
+
+/* =========================================================
+   CHECK
+========================================================= */
+
+.called-check {
+  position: absolute;
+
+  bottom: clamp(-6px, -0.5vw, -3px);
+
+  right: clamp(12px, 1.7vw, 24px);
+
+  width: clamp(10px, 1.2vw, 17px);
+
+  height: clamp(10px, 1.2vw, 17px);
+
+  display: grid;
+
+  place-items: center;
+
+  background: var(--green);
+
+  border: clamp(1px, 0.15vw, 2px) solid #0b0d12;
+
+  border-radius: 50%;
+
+  color: #06301f;
+
+  font-size: clamp(6px, 0.7vw, 10px);
+
+  font-weight: 900;
+
+  z-index: 7;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PLAYER INFO
+========================================================= */
+
+.player-info {
+  width: 100%;
+
+  min-width: 0;
+
+  margin-top: clamp(3px, 0.7vw, 10px);
+
+  text-align: center;
+
+  overflow: hidden;
+}
+
+.player-name {
+  width: 100%;
+
+  max-width: 100%;
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #fff;
+
+  font-size: clamp(5px, 0.85vw, 12px);
+
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.75);
+}
+
+.player-team {
+  width: 100%;
+
+  max-width: 100%;
+
+  min-width: 0;
+
+  margin-top: 3px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  font: 700 clamp(4px, 0.58vw, 8px) var(--mono);
+}
+
+/* =========================================================
+   HOVER LABEL
+========================================================= */
+
+.edit-label {
+  position: absolute;
+
+  left: 50%;
+  top: 42px;
+
+  transform: translate(-50%, -50%);
+
+  opacity: 0;
+
+  padding: 5px 7px;
+
+  background: rgba(7, 8, 11, 0.92);
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  border-radius: 4px;
+
+  color: #fff;
+
+  font: 700 clamp(5px, 0.55vw, 7px) var(--mono);
+
+  z-index: 8;
+
+  pointer-events: none;
+
+  transition: 0.15s ease;
+
+  white-space: nowrap;
+}
+
+.pitch-player:hover .edit-label {
+  opacity: 1;
+}
+
+/* =========================================================
+   SIDE
+========================================================= */
+
+.side {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+.side-card {
+  padding: 15px;
+}
+
+.side-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-end;
+
+  margin-bottom: 12px;
+}
+
+.side-header h3 {
+  margin: 0;
+
+  font: 22px var(--display);
+}
+
+.side-header span {
+  color: var(--muted);
+
+  font: 700 8px var(--mono);
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.summary-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 7px;
+}
+
+.summary-box {
+  padding: 10px;
+
+  background: #0d1015;
+
+  border: 1px solid var(--line);
+
+  border-radius: 4px;
+}
+
+.summary-box span {
+  display: block;
+
+  color: var(--muted);
+
+  font: 700 7px var(--mono);
+}
+
+.summary-box strong {
+  display: block;
+
+  margin-top: 4px;
+
+  font: 20px var(--display);
+}
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+.jornada-history {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.jornada-row {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 8px 10px;
+
+  background: var(--panel2);
+
+  border: 1px solid var(--line);
+
+  border-radius: 5px;
+
+  color: #fff;
+
+  font: 700 10px var(--mono);
+
+  transition: 0.15s ease;
+}
+
+.jornada-row:hover {
+  border-color: #505765;
+
+  transform: translateX(-2px);
+}
+
+.jornada-row.active {
+  border-color: var(--green);
+}
+
+.jornada-row .jr-label {
+  color: var(--muted);
+}
+
+.jornada-row .jr-points {
+  color: #fff;
+}
+
+.jornada-row .jr-points.pos {
+  color: #64d9a1;
+}
+
+.jornada-row .jr-points.neg {
+  color: #ff6c78;
+}
+
+.jornada-row .jr-points.pending {
+  color: var(--yellow);
+}
+
+/* =========================================================
+   HELP
+========================================================= */
+
+.help {
+  color: var(--muted);
+
+  font-size: 10px;
+
+  line-height: 1.55;
+}
+
+.help strong {
+  color: #fff;
+}
+
+.legend-positive {
+  color: #64d9a1;
+}
+
+.legend-negative {
+  color: #ff6c78;
+}
+
+.legend-pending {
+  color: var(--yellow);
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading-card {
+  min-height: 300px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  background: var(--panel);
+
+  border: 1px solid var(--line);
+
+  border-radius: 6px;
+
+  color: var(--muted);
+
+  font: 700 9px var(--mono);
+}
+
+.loading-spinner {
+  width: 28px;
+  height: 28px;
+
+  border: 2px solid var(--line2);
+
+  border-top-color: var(--red);
+
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error-card {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  padding: 20px;
+
+  background: var(--panel);
+
+  border: 1px solid rgba(225, 29, 46, 0.45);
+
+  border-radius: 6px;
+
+  color: var(--muted);
+}
+
+.error-card strong {
+  color: var(--red);
+
+  font: 800 10px var(--mono);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* =========================================================
+   DESKTOP PEQUEÑO / TABLET GRANDE
+========================================================= */
+
+@media (max-width: 1150px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .side {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 850px) {
+  .pitch {
+    height: 700px;
+  }
+
+  /*
+   * Reducimos tanto el gap horizontal
+   * como el espacio lateral.
+   */
+  .formation-row {
+    left: 1.5%;
+    right: 1.5%;
+
+    gap: 1px;
+  }
+
+  /*
+   * IMPORTANTE:
+   *
+   * Sin max-width.
+   *
+   * Los jugadores se reparten el espacio.
+   */
+
+  .player-card-visual {
+    width: min(70px, 100%);
+  }
+
+  .player-info {
+    margin-top: 5px;
+  }
+
+  .player-name {
+    font-size: clamp(6px, 1.25vw, 10px);
+  }
+
+  .player-team {
+    font-size: clamp(5px, 0.85vw, 7px);
+  }
+
+  .center-circle {
+    width: 120px;
+    height: 120px;
+  }
+
+  .side {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   MÓVIL
+========================================================= */
+
+@media (max-width: 700px) {
+  .app {
+    padding: 16px;
+  }
+
+  .top {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .top-right {
+    width: 100%;
+  }
+
+  .top-stat {
+    flex: 1;
+
+    min-width: 0;
+  }
+
+  .title {
+    font-size: 38px;
+  }
+
+  .pitch {
+    height: 650px;
+  }
+
+  /*
+   * Muy poco gap.
+   *
+   * Esto es importante para 5-6 jugadores.
+   */
+  .formation-row {
+    left: 1%;
+    right: 1%;
+
+    gap: 0;
+  }
+
+  .player-card-visual {
+    width: min(59px, 100%);
+
+    border-width: 1px;
+  }
+
+  .player-info {
+    margin-top: 4px;
+  }
+
+  .player-name {
+    font-size: clamp(5px, 2vw, 8px);
+  }
+
+  .player-team {
+    font-size: clamp(4px, 1.5vw, 6px);
+  }
+
+  .position-badge {
+    min-width: 18px;
+
+    width: 18px;
+
+    height: 18px;
+
+    font-size: 5px;
+
+    padding: 0 2px;
+  }
+
+  .corner-badge {
+    min-width: 17px;
+
+    height: 17px;
+
+    font-size: 6px;
+  }
+
+  .club-crest {
+    width: 23px;
+    height: 23px;
+  }
+
+  .called-check {
+    width: 13px;
+    height: 13px;
+
+    font-size: 7px;
+  }
+
+  .top-stat strong {
+    font-size: 23px;
+  }
+
+  .matchday-bar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .matchday-box:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .jornada-tab {
+    width: 54px;
+    height: 54px;
+  }
+
+  .jornada-tab strong {
+    font-size: 14px;
+  }
+}
+
+/* =========================================================
+   MÓVIL < 480px
+========================================================= */
+
+@media (max-width: 480px) {
+  .app {
+    padding: 8px;
+  }
+
+  .pitch-card {
+    padding: 7px;
+  }
+
+  /*
+   * Campo más compacto.
+   */
+  .pitch {
+    height: 590px;
+  }
+
+  /*
+   * CERO GAP.
+   *
+   * Los jugadores se pegan lo máximo
+   * posible para garantizar que los 6
+   * entren siempre.
+   */
+  .formation-row {
+    left: 0;
+    right: 0;
+
+    gap: 0;
+  }
+
+  /*
+   * No ponemos width fija.
+   *
+   * La card se calcula automáticamente
+   * según el espacio de cada jugador.
+   */
+  .player-card-visual {
+    width: min(48px, 100%);
+  }
+
+  .player-info {
+    margin-top: 3px;
+  }
+
+  .player-name {
+    font-size: 5.5px;
+  }
+
+  .player-team {
+    font-size: 4.5px;
+  }
+
+  .position-badge {
+    min-width: 15px;
+
+    width: 15px;
+
+    height: 15px;
+
+    top: -4px;
+    left: -4px;
+
+    font-size: 4px;
+  }
+
+  .corner-badge {
+    min-width: 14px;
+
+    height: 14px;
+
+    top: -4px;
+    left: -4px;
+
+    font-size: 5px;
+
+    padding: 0 2px;
+  }
+
+  .club-crest {
+    width: 19px;
+    height: 19px;
+
+    right: -5px;
+    bottom: -5px;
+  }
+
+  .called-check {
+    width: 10px;
+    height: 10px;
+
+    right: 11px;
+    bottom: -4px;
+
+    font-size: 5px;
+  }
+
+  .center-circle {
+    width: 90px;
+    height: 90px;
+  }
+
+  .team-heading-logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .team-heading h2 {
+    font-size: 18px;
+  }
+
+  .team-heading p {
+    font-size: 8px;
+  }
+}
+
+/* =========================================================
+   MÓVIL MUY PEQUEÑO < 360px
+========================================================= */
+
+@media (max-width: 360px) {
+  .app {
+    padding: 5px;
+  }
+
+  .pitch-card {
+    padding: 5px;
+  }
+
+  .pitch {
+    height: 550px;
+  }
+
+  .formation-row {
+    left: 0;
+    right: 0;
+
+    gap: 0;
+  }
+
+  .player-card-visual {
+    width: min(42px, 100%);
+  }
+
+  .player-name {
+    font-size: 5px;
+  }
+
+  .player-team {
+    font-size: 4px;
+  }
+
+  .position-badge {
+    min-width: 13px;
+
+    width: 13px;
+
+    height: 13px;
+
+    top: -4px;
+    left: -4px;
+
+    font-size: 3.5px;
+  }
+
+  .corner-badge {
+    min-width: 12px;
+
+    height: 12px;
+
+    top: -3px;
+    left: -3px;
+
+    font-size: 4px;
+  }
+
+  .club-crest {
+    width: 16px;
+    height: 16px;
+
+    right: -4px;
+    bottom: -4px;
+  }
+
+  .called-check {
+    width: 9px;
+    height: 9px;
+
+    right: 9px;
+    bottom: -4px;
+
+    font-size: 4px;
+  }
+
+  .jornada-tab {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* =========================================================
+   AJUSTE FINAL DE POSICIONES EN MÓVIL
+========================================================= */
+
+/*
+ * En pantallas pequeñas reducimos todavía más
+ * la separación vertical.
+ *
+ * Esto evita que parezca que hay cuatro bloques
+ * independientes dentro del campo.
+ */
+
+@media (max-width: 600px) {
+  .row-striker {
+    top: 9%;
+  }
+
+  .row-midfield {
+    top: 30%;
+  }
+
+  .row-defence {
+    bottom: 27%;
+  }
+
+  .row-goalkeeper {
+    bottom: 6%;
+  }
+}
+
+/* =========================================================
+   AJUSTE FINAL PARA MÓVIL MUY PEQUEÑO
+========================================================= */
+
+@media (max-width: 400px) {
+  .row-striker {
+    top: 9%;
+  }
+
+  .row-midfield {
+    top: 29%;
+  }
+
+  .row-defence {
+    bottom: 26%;
+  }
+
+  .row-goalkeeper {
+    bottom: 5%;
+  }
+}

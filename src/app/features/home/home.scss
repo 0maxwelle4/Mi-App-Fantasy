@@ -1,0 +1,326 @@
+/* LEAGUES */
+.league-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr;
+  gap: 12px;
+}
+.league-card {
+  min-height: 230px;
+  padding: 22px;
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  cursor: pointer;
+
+  /* Animación premium de alta fidelidad */
+  transition:
+    background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform, box-shadow;
+}
+
+/* Hover Moderno y Fresco para las tarjetas normales */
+.league-card:hover {
+  transform: translateY(-4px); /* Elevación un poco más pronunciada pero fluida */
+  border-color: rgba(255, 255, 255, 0.12); /* Brillo sutil en el borde */
+
+  /* Crea un efecto de profundidad suave en interfaces oscuras/modernas */
+  background: linear-gradient(145deg, #242936, var(--panel));
+  box-shadow:
+    0 12px 24px -10px rgba(0, 0, 0, 0.4),
+    0 4px 12px -5px rgba(0, 0, 0, 0.2);
+}
+
+.league-card.featured {
+  border-top: 2px solid var(--red);
+}
+.league-card.featured:hover {
+  border-top-color: var(--red);
+}
+
+.league-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.league-badge {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  background: var(--red);
+  font: 600 12px var(--mono);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+/* Micro-interacción: el escudo se inclina un poco al pasar por la tarjeta */
+.league-card:hover .league-badge {
+  transform: scale(1.05) rotate(2deg);
+}
+
+.league-badge.muted {
+  background: #303541;
+}
+.status-pill,
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 7px;
+  background: var(--red-soft);
+  color: #ff6673;
+  font: 600 9px var(--mono);
+}
+.status-pill.neutral {
+  color: #a9adba;
+  background: #222631;
+}
+.league-card h3 {
+  margin-top: 20px;
+  font-size: 20px;
+}
+.league-card > p {
+  margin: 5px 0 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.league-position {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.league-position small,
+.league-position strong {
+  display: block;
+}
+.league-position small {
+  color: var(--muted);
+  font: 9px var(--mono);
+}
+.league-position strong {
+  font: 24px var(--display);
+}
+.league-position strong span {
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+
+/* Tarjeta para añadir ligas */
+.add-league {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  align-content: center;
+  border-style: dashed;
+  opacity: 0.85;
+}
+
+/* Hover fresco y limpio para la acción de añadir */
+.add-league:hover {
+  opacity: 1;
+  border-color: var(--red);
+  background: rgba(255, 102, 115, 0.03); /* Un destello rojo extremadamente sutil */
+  box-shadow: 0 8px 20px -8px rgba(255, 102, 115, 0.15); /* Sombra difuminada con el color de tu marca */
+}
+
+.add-league .plus {
+  font-size: 34px;
+  color: var(--red);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+/* El signo '+' pulsa de forma limpia hacia adelante */
+.add-league:hover .plus {
+  transform: scale(1.15);
+}
+
+.add-league h3 {
+  margin-top: 8px;
+}
+.add-league p {
+  max-width: 230px;
+  color: var(--muted);
+}
+
+/* FIXTURES */
+.fixture-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.fixture {
+  display: grid;
+  grid-template-columns: 42px 1fr 48px;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+.fixture-date {
+  text-align: center;
+  border-right: 1px solid var(--line);
+  padding-right: 10px;
+}
+.fixture-date b {
+  display: block;
+  font: 24px var(--display);
+}
+.fixture-date span {
+  color: var(--muted);
+  font: 9px var(--mono);
+}
+.fixture-teams {
+  display: grid;
+  grid-template-columns: 1fr 22px 1fr;
+  align-items: center;
+  text-align: center;
+  font: 600 11px var(--mono);
+}
+.fixture-teams span {
+  color: var(--muted);
+  font-size: 8px;
+}
+.fixture-time {
+  font: 600 11px var(--mono);
+  text-align: right;
+}
+.fixture-tag {
+  grid-column: 2 / -1;
+  color: var(--red);
+  font: 9px var(--mono);
+  margin-top: 2px;
+}
+
+/* ==========================================================
+   LEAGUE SKELETON
+   ========================================================== */
+
+.league-skeleton {
+  pointer-events: none;
+  cursor: default;
+}
+
+.skeleton-league-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+}
+
+.skeleton-status {
+  width: 55px;
+  height: 20px;
+  border-radius: 20px;
+}
+
+.skeleton-league-title {
+  width: 65%;
+  height: 22px;
+  margin-top: 18px;
+  border-radius: 5px;
+}
+
+.skeleton-league-description {
+  width: 75%;
+  height: 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.skeleton-label {
+  width: 50px;
+  height: 9px;
+  margin-bottom: 7px;
+  border-radius: 3px;
+}
+
+.skeleton-value {
+  width: 65px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.skeleton-link {
+  width: 80px;
+  height: 12px;
+  margin-top: 20px;
+  border-radius: 4px;
+}
+
+/* ==========================================================
+   FIXTURE SKELETON
+   ========================================================== */
+
+.fixture-skeleton {
+  pointer-events: none;
+  cursor: default;
+}
+
+.skeleton-fixture-day {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+}
+
+.skeleton-fixture-month {
+  width: 30px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.skeleton-fixture-team {
+  width: 35px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.skeleton-fixture-vs {
+  width: 20px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.skeleton-fixture-time {
+  width: 40px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.skeleton-fixture-tag {
+  width: 55px;
+  height: 18px;
+  border-radius: 20px;
+}
+
+/* ==========================================================
+   EMPTY STATE
+   ========================================================== */
+
+.home-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 180px;
+
+  text-align: center;
+
+  color: #7a8293;
+
+  span {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+
+  h3 {
+    margin: 0 0 5px;
+  }
+
+  p {
+    margin: 0;
+  }
+}

@@ -1,0 +1,355 @@
+<!-- ========================================================== PLAYER CARD SKELETON ========================================================== -->
+<ng-template #playerCardSkeleton>
+  <article class="card visual-skeleton">
+    <!-- PHOTO -->
+    <div class="skeleton-photo"><div class="skeleton-shimmer skeleton-badge"></div></div>
+    <!-- BODY -->
+    <div class="skeleton-body">
+      <!-- NAME + CLUB -->
+      <div class="skeleton-player-header">
+        <div>
+          <div class="skeleton-shimmer skeleton-name"></div>
+          <div class="skeleton-shimmer skeleton-subtitle"></div>
+        </div>
+        <div class="skeleton-shimmer skeleton-club"></div>
+      </div>
+      <!-- STATS -->
+      <div class="skeleton-stats">
+        <div>
+          <div class="skeleton-shimmer skeleton-label"></div>
+          <div class="skeleton-shimmer skeleton-value"></div>
+        </div>
+        <div>
+          <div class="skeleton-shimmer skeleton-label"></div>
+          <div class="skeleton-shimmer skeleton-value"></div>
+        </div>
+      </div>
+      <!-- TREND -->
+      <div class="skeleton-trend">
+        <div class="skeleton-shimmer skeleton-trend-label"></div>
+        <div class="skeleton-shimmer skeleton-trend-value"></div>
+      </div>
+      <!-- CLAUSE -->
+      <div class="skeleton-clause">
+        <div class="skeleton-shimmer skeleton-label"></div>
+        <div class="skeleton-shimmer skeleton-clause-value"></div>
+      </div>
+      <!-- BUTTON -->
+      <div class="skeleton-shimmer skeleton-button"></div>
+    </div>
+  </article>
+</ng-template>
+<!-- ========================================================== HEADER ========================================================== -->
+<header class="top">
+  <div>
+    <div class="eyebrow">LIGA ROJA · CLÁUSULAS DE RESCISIÓN · ACTUALIZADO AHORA</div>
+    <h1 class="title">CLÁUSULAS</h1>
+  </div>
+
+  @if (false) {
+    <div class="money">
+      <span> TOTAL EN LA LIGA </span> <strong> {{ players().length }} </strong>
+    </div>
+  }
+
+  <!-- BOTON REFRESCAR -->
+  <button
+    type="button"
+    class="refresh-btn"
+    [class.spinning]="loading() || clausesLoading()"
+    [disabled]="loading() || clausesLoading()"
+    (click)="refresh()"
+    aria-label="Refrescar movimientos"
+    title="Refrescar movimientos"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="23 4 23 10 17 10"></polyline>
+      <polyline points="1 20 1 14 7 14"></polyline>
+      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+    </svg>
+    <span>Refrescar</span>
+  </button>
+</header>
+<!-- ========================================================== STATUS ========================================================== -->
+<div class="status">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M12 2l7 4v6c0 5-3 8-7 10-4-2-7-5-7-10V6l7-4z" />
+  </svg>
+  <div>
+    <h2>{{ availablePlayersCount() }} cláusulas disponibles</h2>
+    <p>
+      ({{ availablePlayersCount() }} disponibles, {{ blockedPlayersCount() }} bloqueadas en total)
+    </p>
+  </div>
+</div>
+<!-- ========================================================== AVAILABILITY ========================================================== -->
+<div class="avail-bar" [class.pos-right]="availability() === 'todas'">
+  <button
+    class="avail-btn"
+    [class.on]="availability() === 'disponibles'"
+    (click)="setAvailability('disponibles')"
+  >
+    <span class="dot"></span> <strong> Solo disponibles </strong>
+    <span> {{ availablePlayersCount() }} disponibles </span>
+  </button>
+  <button
+    class="avail-btn"
+    [class.on]="availability() === 'todas'"
+    (click)="setAvailability('todas')"
+  >
+    <span class="dot"></span> <strong> Todas </strong>
+    <span> {{ players().length }} en total </span>
+  </button>
+</div>
+<!-- ========================================================== TOOLBAR ========================================================== -->
+<div class="toolbar">
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+    <input
+      class="search"
+      placeholder="Buscar por jugador, club o manager..."
+      [value]="searchName()"
+      [disabled]="loading() || sorting()"
+      (input)="searchName.set($any($event.target).value)"
+    />
+  </div>
+  <!-- MANAGER -->
+  <select
+    class="f-select"
+    [value]="selectedManager()"
+    [disabled]="loading() || sorting()"
+    (change)="setManager($any($event.target).value)"
+  >
+    <option value="todos">Todos los managers</option>
+    @for (manager of managers(); track manager.id) {
+      <option [value]="manager.id">{{ manager.name }}</option>
+    }
+  </select>
+  <!-- SORT -->
+  <div class="sort-group">
+    <select
+      class="f-select"
+      [value]="sortBy()"
+      [disabled]="loading() || sorting()"
+      (change)="setSort($any($event.target).value)"
+    >
+      <option value="CLAUSE_DESC">Ordenar: Cláusula</option>
+      <option value="POINTS_DESC">Ordenar: Puntos</option>
+      <option value="NAME_ASC">Ordenar: Nombre</option>
+      <option value="MANAGER_ASC">Ordenar: Manager</option>
+      <option value="TREND_DESC">Ordenar: Tendencia 24h</option>
+      <option value="TIME_DESC">Ordenar: Tiempo restante</option>
+      <option value="PROFIT_DESC">Ordenar: Rentabilidad</option>
+    </select>
+    <button
+      class="order-btn"
+      [attr.data-order]="sortOrder()"
+      [disabled]="loading() || sorting()"
+      (click)="toggleOrder()"
+      title="Cambiar orden"
+    >
+      @if (sortOrder() === 'desc') {
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+
+        <span> Menor a mayor </span>
+      } @else {
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 5v14M19 12l-7 7-7-7" />
+        </svg>
+        <span> Mayor a menor </span>
+      }
+    </button>
+  </div>
+</div>
+<!-- ========================================================== POSITION FILTER ========================================================== -->
+<div class="pos-row">
+  <button
+    class="pos-chip"
+    [class.on]="selectedPosition() === 'todas'"
+    (click)="setPosition('todas')"
+  >
+    Todas
+  </button>
+  <button
+    class="pos-chip"
+    [class.on]="selectedPosition() === 'Portero'"
+    (click)="setPosition('Portero')"
+  >
+    Porteros
+  </button>
+  <button
+    class="pos-chip"
+    [class.on]="selectedPosition() === 'Defensa'"
+    (click)="setPosition('Defensa')"
+  >
+    Defensas
+  </button>
+  <button
+    class="pos-chip"
+    [class.on]="selectedPosition() === 'Medio'"
+    (click)="setPosition('Medio')"
+  >
+    Medios
+  </button>
+  <button
+    class="pos-chip"
+    [class.on]="selectedPosition() === 'Delantero'"
+    (click)="setPosition('Delantero')"
+  >
+    Delanteros
+  </button>
+</div>
+<!-- ========================================================== ACTIVE FILTERS ========================================================== -->
+<div class="active-row">
+  <!-- SEARCH -->
+  @if (searchName()) {
+    <span class="tag-x">
+      <span> Búsqueda: "{{ searchName() }}" </span>
+      <button aria-label="Quitar búsqueda" (click)="clearSearch()">×</button>
+    </span>
+  }
+  <!-- MANAGER -->
+  @if (selectedManager() !== 'todos') {
+    <span class="tag-x">
+      <span> Manager: {{ selectedManagerName() }} </span>
+      <button aria-label="Quitar manager" (click)="setManager('todos')">×</button>
+    </span>
+  }
+  <!-- POSITION -->
+  @if (selectedPosition() !== 'todas') {
+    <span class="tag-x">
+      <span> Posición: {{ selectedPosition() }} </span>
+      <button aria-label="Quitar posición" (click)="setPosition('todas')">×</button>
+    </span>
+  }
+  <!-- AVAILABILITY -->
+  @if (availability() === 'todas') {
+    <span class="tag-x">
+      <span> Mostrando también bloqueadas </span>
+      <button aria-label="Quitar filtro de disponibilidad" (click)="setAvailability('disponibles')">
+        ×
+      </button>
+    </span>
+  }
+  <!-- NO FILTERS -->
+  @if (
+    !searchName() &&
+    selectedManager() === 'todos' &&
+    selectedPosition() === 'todas' &&
+    availability() === 'disponibles'
+  ) {
+    <span class="hint"> Sin filtros adicionales </span>
+  }
+  <!-- CLEAR ALL -->
+  @if (
+    searchName() ||
+    selectedManager() !== 'todos' ||
+    selectedPosition() !== 'todas' ||
+    availability() === 'todas'
+  ) {
+    <button class="clear-all" (click)="resetAll()">Limpiar todo</button>
+  }
+</div>
+<!-- ========================================================== RESULTS ========================================================== -->
+<section class="section">
+  <div class="section-head">
+    <h2>RESULTADOS</h2>
+    <span class="small">
+      {{ filteredPlayers().length }} jugador{{ filteredPlayers().length === 1 ? '' : 'es' }}
+    </span>
+  </div>
+  <!-- ======================================================== PLAYER GRID ======================================================== -->
+  <div class="grid">
+    <!-- ====================================================== LOADING ====================================================== -->
+    @if (loading() || sorting()) {
+      @for (i of skeletons; track i) {
+        <ng-container [ngTemplateOutlet]="playerCardSkeleton" />
+      }
+    }
+    <!-- ====================================================== PLAYERS ====================================================== -->
+    @else {
+      @for (player of filteredPlayers(); track player.playerTeamId) {
+        <app-player-card
+          [players]="player"
+          [config]="{
+            isOwnPlayer: false,
+            isMarketOpen: !!player.playerMarket,
+            hasShieldsAvailable: false,
+          }"
+          (onBuyoutClick)="onPlayerBuyout($event)"
+        />
+      }
+      <!-- ==================================================== EMPTY ==================================================== -->
+      @empty {
+        <div class="empty">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <p>Ningún jugador coincide con estos filtros.</p>
+          <button (click)="resetAll()">Quitar filtros</button>
+        </div>
+      }
+    }
+  </div>
+</section>
+
+<app-confirmation-modal
+  [isOpen]="buyoutConfirmationOpen()"
+  [title]="buyoutConfirmationTitle()"
+  [description]="buyoutConfirmationDescription()"
+  [player]="buyoutConfirmationPlayer()"
+  eyebrow="⚠️ PAGAR CLÁUSULA"
+  confirmText="Pagar Cláusula"
+  cancelText="Cancelar"
+  (confirmed)="onBuyoutConfirmed()"
+  (cancelled)="onBuyoutCancelled()"
+/>

@@ -1,0 +1,503 @@
+:host {
+  display: contents;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(4, 5, 7, 0.78);
+  backdrop-filter: blur(3px);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 5vh 16px;
+  overflow-y: auto;
+}
+.modal-overlay.open {
+  display: flex;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Botones superiores de navegación
+.modal-close,
+.modal-back {
+  position: absolute;
+  top: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: #11131a;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  transition: 0.15s ease;
+}
+.modal-close {
+  right: 14px;
+}
+.modal-close:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.modal-back {
+  left: 14px;
+  font-size: 13px;
+}
+.modal-back:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+// ================= ESTILOS VISTA 1: ACCIONES =================
+.action-modal {
+  width: 100%;
+  max-width: 420px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  animation: modalIn 0.18s ease;
+  overflow: hidden;
+  font-family: var(--body);
+  color: var(--text);
+  margin: auto;
+}
+.action-modal-head {
+  position: relative;
+  padding: 24px 22px 20px;
+  background: radial-gradient(circle at 15% 0%, rgba(225, 29, 46, 0.16), transparent 55%), #0d0f15;
+  border-bottom: 1px solid var(--line);
+}
+.action-player {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex: none;
+    border: 2px solid #313847;
+    background: #151922;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .pos-chip {
+    display: inline-block;
+    padding: 3px 7px;
+    border-radius: 3px;
+    font: 600 8px var(--mono);
+    background: #292e39;
+    color: #d6d9df;
+    margin-bottom: 6px;
+  }
+  h3 {
+    margin: 0;
+    font: 21px var(--display);
+    line-height: 1;
+  }
+  p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+  }
+}
+.action-list {
+  padding: 10px;
+}
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 13px 12px;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  text-align: left;
+  border-radius: 4px;
+  transition: background 0.12s ease;
+  font: inherit;
+  cursor: pointer;
+  &:hover {
+    background: #171a23;
+  }
+  + .action-item {
+    margin-top: 1px;
+  }
+}
+
+.action-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  flex: none;
+  &.green {
+    background: rgba(67, 197, 138, 0.13);
+    color: var(--green);
+  }
+  &.blue {
+    background: rgba(79, 143, 247, 0.15);
+    color: var(--blue);
+  }
+  &.yellow {
+    background: rgba(231, 189, 91, 0.15);
+    color: var(--yellow);
+  }
+  &.red {
+    background: rgba(225, 29, 46, 0.15);
+    color: #ff6673;
+  }
+  &.muted {
+    background: #22262f;
+    color: var(--muted);
+  }
+}
+.action-text {
+  flex: 1;
+  min-width: 0;
+  strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  small {
+    display: block;
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 10px;
+  }
+}
+.action-chevron {
+  color: var(--muted2);
+  font-size: 17px;
+  flex: none;
+}
+.action-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 8px 12px;
+}
+
+// ================= ESTILOS VISTA 2: OFERTAS =================
+.offer-modal {
+  width: 100%;
+  max-width: 480px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  animation: modalIn 0.18s ease;
+  margin: auto;
+  color: var(--text);
+}
+.offer-modal-head {
+  position: relative;
+  padding: 26px 24px 20px;
+  background: radial-gradient(circle at 15% 0%, rgba(79, 143, 247, 0.18), transparent 55%), #0d0f15;
+  border-bottom: 1px solid var(--line);
+  .eyebrow {
+    font: 600 9px var(--mono);
+    color: var(--blue);
+    letter-spacing: 0.08em;
+  }
+  h2 {
+    margin: 6px 0 0;
+    font: 27px var(--display);
+    line-height: 1.05;
+  }
+}
+.offer-modal-body {
+  padding: 22px 24px 24px;
+}
+.offer-modal-player {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 18px;
+  .offer-modal-photo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex: none;
+    border: 2px solid #313847;
+    background: #151922;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .pos-chip {
+    display: inline-block;
+    padding: 3px 7px;
+    border-radius: 3px;
+    font: 600 8px var(--mono);
+    background: #292e39;
+    color: #d6d9df;
+    margin-bottom: 6px;
+  }
+  h3 {
+    margin: 0;
+    font: 19px var(--display);
+    line-height: 1;
+  }
+  p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+  }
+}
+.offer-modal-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+  div {
+    padding: 12px 13px;
+    background: #0d0f14;
+    border: 1px solid var(--line);
+  }
+  span {
+    display: block;
+    color: var(--muted);
+    font: 8px var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  strong {
+    display: block;
+    margin-top: 6px;
+    font: 17px var(--display);
+  }
+}
+.offer-amount-label {
+  display: block;
+  color: var(--muted);
+  font: 9px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.offer-amount-input {
+  display: flex;
+  align-items: center;
+  background: #0d0f15;
+  border: 1px solid var(--line);
+  margin-bottom: 20px;
+  transition: border-color 0.15s ease;
+  &:focus-within {
+    border-color: var(--red);
+  }
+  span {
+    padding: 0 2px 0 14px;
+    color: var(--muted);
+    font: 17px var(--display);
+  }
+  input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding: 14px 14px 14px 4px;
+    color: #fff;
+    font: 18px var(--display) !important;
+    outline: 0;
+    &::placeholder {
+      color: var(--muted2);
+    }
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    &[type='number'] {
+      -moz-appearance: textfield;
+    }
+  }
+}
+.offer-modal-actions {
+  //display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.offer-btn {
+  padding: 15px;
+  border: 0;
+  border-radius: 4px;
+  font: 700 11px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: 0.15s ease;
+  cursor: pointer;
+  width: -webkit-fill-available;
+  &.primary {
+    background: var(--red);
+    color: #fff;
+    &:hover {
+      background: #c8172a;
+    }
+  }
+  &.secondary {
+    background: transparent;
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    &:hover {
+      background: rgba(79, 143, 247, 0.1);
+    }
+  }
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+.offer-budget {
+  text-align: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font: 11px var(--mono);
+  strong {
+    color: #fff;
+  }
+}
+
+.maxMinBind {
+  //text-align: center;
+  //padding-top: 14px;
+  color: var(--muted);
+  font: 11px var(--mono);
+  strong {
+    color: #fff;
+  }
+}
+
+// ================= ESTILOS VISTA 3: ADVERTENCIA (WARNING) =================
+.warning-modal {
+  // Cambiamos el gradiente superior a tonos rojos de peligro usando tu variable --red
+  .offer-modal-head {
+    background:
+      radial-gradient(circle at 15% 0%, rgba(225, 29, 46, 0.22), transparent 55%), #0d0f15;
+
+    .eyebrow {
+      color: #ff6673; // Color rojo suave para el subtítulo superior
+    }
+  }
+
+  // Contenedor de la descripción de la advertencia
+  .warning-box {
+    background: rgba(225, 29, 46, 0.07);
+    border: 1px solid rgba(225, 29, 46, 0.2);
+    border-radius: 4px;
+    padding: 16px;
+    margin: 20px 0;
+
+    p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+  }
+
+  // Contenedor de botones inferiores
+  .warning-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+
+    // Botón principal de Confirmación (Reutiliza lógica de tus .action-item de la Vista 1)
+    .btn-confirm {
+      background: var(--red);
+      color: #fff;
+      border: 0;
+      font-weight: 700;
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: #c8172a;
+      }
+    }
+
+    // Botón secundario de Cancelar
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--muted);
+
+      &:hover {
+        background: #171a23;
+        color: var(--text);
+        border-color: #313847;
+      }
+    }
+  }
+}
+
+// ================= MEDIA QUERIES RESPONSIVE =================
+@media (max-width: 520px) {
+  .modal-overlay {
+    padding: 0;
+    align-items: stretch;
+  }
+  .action-modal,
+  .offer-modal {
+    max-width: none;
+    min-height: 100%;
+    border-left: 0;
+    border-right: 0;
+  }
+  .action-modal-head,
+  .offer-modal-head {
+    padding: 22px 18px 18px;
+  }
+  .offer-modal-body {
+    padding: 18px;
+  }
+  .offer-modal-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .offer-modal-actions {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 360px) {
+  .offer-modal-stats {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

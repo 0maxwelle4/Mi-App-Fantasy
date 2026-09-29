@@ -1,0 +1,297 @@
+<article class="card" (click)="openPlayerStats(players().playerMaster.id)">
+  <div class="photo">
+    @if (managerName()) {
+      <div
+        class="manager-badge"
+        [title]="managerName()"
+        (click)="goManagerTeam(); $event.stopPropagation()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+
+        <span>{{ managerName() }}</span>
+      </div>
+    }
+
+    @if (isMarketPlayer() && numberOfBids() > 0) {
+      <div class="bid-counter" [class.has-my-bid]="hasBid()" [title]="numberOfBids() + ' pujas'">
+        {{ numberOfBids() }}
+      </div>
+    }
+
+    <img [src]="players().playerMaster.images.transparent['256x256']" loading="lazy" />
+  </div>
+
+  <div class="body">
+    <!-- PLAYER INFO -->
+    <div class="name">
+      <div>
+        <h3>
+          {{ players().playerMaster.name }}
+        </h3>
+
+        <div class="small">
+          {{ playerTeam()?.name }}
+          ·
+          {{ positionText() }}
+        </div>
+      </div>
+
+      <div class="club">
+        <img [src]="playerTeam()?.badgeColor" loading="lazy" />
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div>
+        <span>PUNTOS</span>
+
+        <strong>
+          {{ players().playerMaster.points }}
+        </strong>
+      </div>
+
+      <div>
+        <span>VALOR</span>
+
+        <strong> {{ players().playerMaster.marketValue | number }}€ </strong>
+      </div>
+    </div>
+
+    <!-- MARKET TREND -->
+    <div class="trend">
+      @if (market(); as market) {
+        <span>
+          {{ market.difference24h > 0 ? '↗' : '↘' }}
+          TENDENCIA 24H
+        </span>
+
+        <strong
+          [class.positive]="market.difference24h > 0"
+          [class.negative]="market.difference24h < 0"
+          style="font-size: larger"
+        >
+          {{ market.difference24h | number: '1.0-0' }}€ ·
+          {{ market.differencePct24h | number: '1.1-2' }}%
+        </strong>
+      }
+    </div>
+
+    <!-- SQUAD INFORMATION -->
+    @if (squadData(); as squad) {
+      <div class="box">
+        <span>CLÁUSULA</span>
+
+        <strong> {{ squad.buyoutClause | number }}€ </strong>
+
+        <div class="rows">
+          @if (squad.isShielded) {
+            <div class="row">
+              <span>Blindaje</span>
+
+              <strong class="positive"> 24h restantes </strong>
+            </div>
+          }
+
+          @if (!config.isOwnPlayer && hasBid()) {
+            <div class="row">
+              <span>MI PUJA</span>
+
+              <strong class="positive"> {{ myBidAmount() | number }}€ </strong>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="countdown">
+      <span>FINALIZA</span>
+
+      <strong [class.positive]="countdownText() === 'FINALIZADO'">
+        {{ countdownText() }}
+      </strong>
+    </div>
+
+    <!-- MARKET INFORMATION -->
+    @if (marketData(); as market) {
+      <div class="box">
+        <span>PRECIO DE VENTA</span>
+
+        <strong> {{ market.salePrice | number }}€ </strong>
+
+        <div class="rows">
+          <div class="row">
+            <span>OFERTAS</span>
+
+            <strong>
+              {{ numberOfBids() }}
+            </strong>
+          </div>
+
+          @if (hasBid()) {
+            <div class="row">
+              <span>MI PUJA</span>
+
+              <strong class="positive"> {{ myBidAmount() | number }}€ </strong>
+            </div>
+          }
+
+          @if (market.directOffer) {
+            <div class="row">
+              <span>OFERTA DIRECTA</span>
+
+              <strong class="positive"> SÍ </strong>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- ACTIONS -->
+    @if (isMarketPlayer()) {
+      @if (!hasBid()) {
+        <button
+          class="btn green"
+          type="button"
+          style="width: -webkit-fill-available"
+          (click)="placeBid(); $event.stopPropagation()"
+        >
+          PUJAR
+        </button>
+      } @else {
+        <div class="action-buttons">
+          <button
+            class="btn blue"
+            type="button"
+            style="width: -webkit-fill-available"
+            (click)="modifyBid(); $event.stopPropagation()"
+          >
+            MODIFICAR
+          </button>
+
+          <button
+            class="btn red"
+            type="button"
+            style="width: -webkit-fill-available"
+            (click)="cancelBid(); $event.stopPropagation()"
+          >
+            CANCELAR PUJA
+          </button>
+        </div>
+      }
+    } @else {
+      @if (squadData(); as squad) {
+        @if (config.isOwnPlayer) {
+          <div class="action-buttons">
+            @if (!squad.playerMarket) {
+              <button
+                class="btn blue"
+                type="button"
+                style="width: -webkit-fill-available"
+                (click)="openAddToMarket(); $event.stopPropagation()"
+              >
+                AÑADIR MERCADO
+              </button>
+            } @else {
+              <button
+                class="btn red"
+                type="button"
+                style="width: -webkit-fill-available"
+                (click)="removeFromMarket(); $event.stopPropagation()"
+              >
+                RETIRAR
+              </button>
+            }
+
+            <button
+              class="btn yellow"
+              type="button"
+              style="width: -webkit-fill-available"
+              (click)="openRaiseClause(); $event.stopPropagation()"
+            >
+              AUMENTAR CLAUSULA
+            </button>
+          </div>
+        } @else {
+          <div class="action-buttons">
+            @if (!hasBid()) {
+              <button
+                class="btn green"
+                type="button"
+                style="width: -webkit-fill-available"
+                (click)="placeBid(); $event.stopPropagation()"
+              >
+                PUJAR
+              </button>
+            } @else {
+              <button
+                class="btn blue"
+                type="button"
+                style="width: -webkit-fill-available"
+                (click)="modifyBid(); $event.stopPropagation()"
+              >
+                MODIFICAR
+              </button>
+
+              <button
+                class="btn red"
+                type="button"
+                style="width: -webkit-fill-available"
+                (click)="cancelBid(); $event.stopPropagation()"
+              >
+                CANCELAR PUJA
+              </button>
+            }
+
+            <!-- CLAUSULAR: solo si no es nuestro jugador y la cláusula está disponible -->
+            @if (isClauseAvailable()) {
+              <button
+                [disabled]="config.isOwnPlayer"
+                [class.disabled]="config.isOwnPlayer"
+                class="btn cyan"
+                type="button"
+                style="width: -webkit-fill-available"
+                (click)="openBuyout(); $event.stopPropagation()"
+              >
+                PAGAR CLÁUSULA
+              </button>
+            }
+          </div>
+        }
+      }
+    }
+  </div>
+</article>
+
+<app-player-stats-modal
+  [playerId]="selectedPlayerId"
+  [isOpen]="showPlayerStats"
+  (closeModal)="closePlayerStats()"
+/>
+
+<app-confirmation-modal
+  [isOpen]="confirmationOpen()"
+  [title]="confirmationTitle()"
+  [description]="confirmationDescription()"
+  [player]="{
+    name: players().playerMaster.name,
+    positionId: players().playerMaster.positionId,
+    image: players().playerMaster.images?.transparent?.['256x256'],
+    teamName: playerTeam()?.name,
+  }"
+  confirmText="Confirmar"
+  cancelText="Cancelar"
+  (confirmed)="onConfirmationSuccess()"
+  (cancelled)="closeConfirmation()"
+>
+</app-confirmation-modal>

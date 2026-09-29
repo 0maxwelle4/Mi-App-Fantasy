@@ -1,0 +1,613 @@
+button,
+input,
+select {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+a {
+  text-decoration: none;
+}
+.app {
+  max-width: 1400px;
+  margin: auto;
+  padding: 32px;
+}
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+.eyebrow {
+  font: 600 9px var(--mono);
+  color: var(--red);
+  letter-spacing: 0.08em;
+}
+.title {
+  margin: 4px 0 0;
+  font: 44px var(--display);
+}
+.money {
+  border-left: 1px solid var(--line);
+  padding-left: 18px;
+}
+.money span {
+  display: block;
+  color: var(--muted);
+  font: 9px var(--mono);
+}
+.money strong {
+  font: 20px var(--display);
+}
+.toolbar {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.search {
+  flex: 1 1 250px;
+  min-width: 180px;
+  padding: 12px 13px;
+  background: #0f1117;
+  border: 1px solid var(--line);
+  color: white;
+  outline: 0;
+}
+.search:focus {
+  border-color: var(--red);
+}
+.filter,
+.sort {
+  padding: 10px 12px;
+  background: #11131a;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: var(--radius);
+}
+.filter.active {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+}
+.summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.metric {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 13px;
+}
+.metric span {
+  display: block;
+  color: var(--muted);
+  font: 9px var(--mono);
+}
+.metric strong {
+  display: block;
+  margin-top: 5px;
+  font: 20px var(--display);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.photo {
+  height: 220px;
+  background: linear-gradient(180deg, #151923, #11131a);
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  position: relative;
+}
+.photo img {
+  height: 205px;
+  max-width: 90%;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.45));
+}
+.badges {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+.badge {
+  padding: 5px 7px;
+  border-radius: 3px;
+  background: #292e39;
+  color: #d6d9df;
+  font: 600 8px var(--mono);
+}
+.badge.red {
+  background: var(--redsoft);
+  color: #ff6673;
+}
+.badge.green {
+  background: rgba(67, 197, 138, 0.1);
+  color: var(--green);
+}
+.body {
+  padding: 13px;
+}
+.name {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+.name h3 {
+  margin: 0;
+  font-size: 17px;
+}
+.club {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.club img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  background: var(--panel3);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+}
+.stats span {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+}
+.stats strong {
+  font: 11px var(--mono);
+}
+.trend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font: 9px var(--mono);
+}
+.positive {
+  color: var(--green);
+}
+.negative {
+  color: #ef6874;
+}
+.box {
+  margin-top: 10px;
+  padding: 11px;
+  background: var(--panel3);
+  border-radius: var(--radius);
+}
+.box span {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+}
+.box strong {
+  display: block;
+  margin-top: 3px;
+  font: 18px var(--display);
+  color: var(--yellow);
+}
+.rows {
+  margin-top: 10px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 7px;
+  font-size: 10px;
+}
+.row span {
+  color: var(--muted);
+}
+.row strong {
+  font: 10px var(--mono);
+}
+.actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+.btn {
+  flex: 1;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 11px;
+  color: #fff;
+  font-weight: 600;
+}
+.btn.red {
+  background: var(--red);
+}
+.btn.green {
+  background: #27a844;
+}
+.btn.blue {
+  background: var(--blue);
+}
+.btn.dark {
+  background: #292e39;
+}
+.section {
+  margin-top: 24px;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 10px;
+}
+.section-head h2 {
+  margin: 0;
+  font: 25px var(--display);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+.table th,
+.table td {
+  padding: 11px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+.table th {
+  color: var(--muted);
+  font: 8px var(--mono);
+  text-transform: uppercase;
+}
+.table td {
+  font-size: 11px;
+}
+.table td.mono {
+  font-family: var(--mono);
+}
+.rival {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #292e39;
+  display: grid;
+  place-items: center;
+  font: 10px var(--mono);
+}
+.notice {
+  padding: 12px 14px;
+  background: var(--redsoft);
+  border: 1px solid rgba(225, 29, 46, 0.3);
+  color: #ff9aa3;
+  font-size: 11px;
+}
+.nav {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid var(--line);
+}
+.nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 14px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  text-decoration: none;
+  color: var(--muted);
+  font: 600 13px var(--body);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.nav-tab svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+.nav-tab .nav-count {
+  font: 600 10px var(--mono);
+  color: var(--muted2);
+}
+.nav-tab.active {
+  color: #fff;
+  border-bottom-color: var(--red);
+}
+.nav-tab.active svg {
+  color: var(--red);
+}
+.nav-tab.active .nav-count {
+  color: var(--red);
+}
+.nav-tab:not(.active):hover {
+  color: #cfd3da;
+}
+.small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.tag {
+  padding: 4px 6px;
+  border-radius: 3px;
+  font: 8px var(--mono);
+  background: #292e39;
+  color: #cfd3da;
+}
+.tag.red {
+  background: var(--redsoft);
+  color: #ff6673;
+}
+.tag.green {
+  background: rgba(67, 197, 138, 0.1);
+  color: var(--green);
+}
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 650px) {
+  .app {
+    padding: 16px;
+  }
+  .top {
+    align-items: start;
+    flex-direction: column;
+  }
+  .grid,
+  .summary {
+    grid-template-columns: 1fr;
+  }
+  .title {
+    font-size: 36px;
+  }
+  .table {
+    display: block;
+    overflow: auto;
+  }
+}
+.countdown {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #0c0e13;
+  border: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.countdown span {
+  color: var(--muted);
+  font: 8px var(--mono);
+  text-transform: uppercase;
+}
+.countdown strong {
+  font: 600 11px var(--mono);
+  color: #ff6673;
+}
+/* ============================================================
+   MARKET HEADER SKELETON
+============================================================ */
+
+.market-header-eyebrow {
+  width: 280px;
+  height: 11px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+}
+
+.market-header-title {
+  width: 170px;
+  height: 34px;
+  border-radius: 5px;
+}
+
+.market-header-money {
+  width: 130px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   SUMMARY
+============================================================ */
+
+.market-summary-value {
+  width: 70px;
+  height: 22px;
+  margin-top: 4px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   PLAYER CARD SKELETON
+============================================================ */
+
+.market-player-skeleton {
+  pointer-events: none;
+  min-height: 420px;
+  overflow: hidden;
+}
+
+/* IMAGE */
+
+.market-player-badge {
+  width: 65px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.market-player-image {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  margin: 10px auto 0;
+}
+
+/* NAME */
+
+.market-player-name {
+  width: 130px;
+  height: 18px;
+  margin-bottom: 7px;
+  border-radius: 4px;
+}
+
+.market-player-team {
+  width: 90px;
+  height: 11px;
+  border-radius: 3px;
+}
+
+.market-player-club {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+/* STATS */
+
+.market-stat-label {
+  width: 45px;
+  height: 9px;
+  margin-bottom: 6px;
+  border-radius: 3px;
+}
+
+.market-stat-value {
+  width: 90px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+/* TREND */
+
+.market-trend-label {
+  width: 90px;
+  height: 10px;
+  margin-bottom: 6px;
+  border-radius: 3px;
+}
+
+.market-trend-value {
+  width: 120px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+/* CLAUSE */
+
+.market-clause-label {
+  width: 55px;
+  height: 9px;
+  margin-bottom: 6px;
+  border-radius: 3px;
+}
+
+.market-clause-value {
+  width: 120px;
+  height: 15px;
+  border-radius: 4px;
+}
+
+/* BUTTON */
+
+.market-player-button {
+  width: 100%;
+  height: 38px;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+
+/* ============================================================
+   BIDS TABLE SKELETON
+============================================================ */
+
+.market-bid-skeleton {
+  display: grid;
+
+  grid-template-columns:
+    1.5fr
+    1fr
+    1fr
+    1fr
+    80px;
+
+  align-items: center;
+
+  gap: 16px;
+
+  min-height: 55px;
+
+  padding: 10px 16px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  .skeleton-shimmer {
+    width: 80%;
+    height: 14px;
+    border-radius: 4px;
+  }
+}
+
+/* ============================================================
+   EMPTY
+============================================================ */
+
+.market-empty {
+  grid-column: 1 / -1;
+
+  text-align: center;
+
+  padding: 60px 20px;
+
+  color: #7a8293;
+
+  h3 {
+    margin-bottom: 6px;
+
+    color: inherit;
+  }
+
+  p {
+    margin: 0;
+  }
+}
